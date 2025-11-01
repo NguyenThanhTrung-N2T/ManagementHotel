@@ -1,15 +1,41 @@
+﻿using ManagementHotel.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Cấu hình dịch vụ
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDbContext<ManagementHotelContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Kiểm tra kết nối cơ sở dữ liệu 
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var logger = services.GetRequiredService<ILogger<Program>>();
+var context = services.GetRequiredService<ManagementHotelContext>();
+try
+{
+    if (await context.Database.CanConnectAsync())
+    {
+        logger.LogInformation("Ket noi thanh cong!");
+    }
+    else
+    {
+        logger.LogWarning("Ket noi that bai!");
+    }
+}
+catch (Exception ex)
+{
+    logger.LogError(ex, "Khong the ket noi database!");
+}
+
+// Cấu hình pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,9 +43,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
