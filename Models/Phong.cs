@@ -1,7 +1,11 @@
-﻿namespace ManagementHotel.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+namespace ManagementHotel.Models
 {
+    [Table("Phong")]
     public class Phong
     {
+        [Key]
         public int MaPhong { get; set; }
         public int SoPhong { get; set; }
         public int MaLoaiPhong { get; set; }

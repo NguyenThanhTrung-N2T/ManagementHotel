@@ -1,7 +1,11 @@
-﻿namespace ManagementHotel.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+namespace ManagementHotel.Models
 {
+    [Table("ChiTietHoaDon")]
     public class ChiTietHoaDon
     {
+        [Key]
         public int MaChiTietHD { get; set; }
         public int MaHoaDon { get; set; }
         public int MaDichVu { get; set; }

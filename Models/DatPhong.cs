@@ -1,7 +1,11 @@
-﻿namespace ManagementHotel.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+namespace ManagementHotel.Models
 {
+    [Table("DatPhong")]
     public class DatPhong
     {
+        [Key]
         public int MaDatPhong { get; set; }
         public int MaKhachHang { get; set; }
         public int MaPhong { get; set; }
@@ -17,6 +21,6 @@
         public virtual Phong Phong { get; set; } = null!;
 
         // DatPhong co 1 HoaDon (1-1)
-        public virtual HoaDon? HoaDon { get; set; }
-        }
+        public HoaDon? HoaDon { get; set; }
+    }
 }
