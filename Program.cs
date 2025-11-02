@@ -1,13 +1,22 @@
 ﻿using ManagementHotel.Data;
+using ManagementHotel.Repositories;
+using ManagementHotel.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Cấu hình routing để sử dụng URL chữ thường
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
 // Cấu hình dịch vụ
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ManagementHotelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
+
+// Đăng ký Services và Repositories 
+builder.Services.AddScoped<ILoaiPhongRepository, LoaiPhongRepository>();
+builder.Services.AddScoped<ILoaiPhongService, LoaiPhongService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

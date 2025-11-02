@@ -1,6 +1,6 @@
 ﻿namespace ManagementHotel.DTOs
 {
-    public class CreatePhongRequest
+    public class CreatePhongRequestDto
     {
         public int SoPhong { get; set; }
         public int MaLoaiPhong { get; set; }

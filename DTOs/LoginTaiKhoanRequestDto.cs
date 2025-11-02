@@ -2,7 +2,7 @@
 
 namespace ManagementHotel.DTOs
 {
-    public class LoginTaiKhoanRequest
+    public class LoginTaiKhoanRequestDto
     {
         [Required(ErrorMessage = "Tên đăng nhập không được để trống.")]
         public string? TenDangNhap { get; set; }

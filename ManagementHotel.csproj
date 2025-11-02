@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <None Include="DTOs\CreateLoaiPhongRequestDto.cs" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,9 @@
 ﻿namespace ManagementHotel.DTOs
 {
-    public class CreateLoaiPhongRequest
+    public class CreateLoaiPhongRequestDto
     {
         public string? TenLoaiPhong { get; set; }
         public string? MoTa { get; set; }
-        public int DonGia { get; set; }
+        public int GiaTheoDem { get; set; }
     }
 }
