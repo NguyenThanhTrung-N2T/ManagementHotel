@@ -8,5 +8,8 @@
         public string? CCCD { get; set; }
         public string? Email { get; set; }
         public string? DiaChi { get; set; }
+
+        // Khach hang co nhieu dat phong (1-N)
+        public virtual ICollection<DatPhong> DatPhongs { get; set; } = new List<DatPhong>();
     }
 }
