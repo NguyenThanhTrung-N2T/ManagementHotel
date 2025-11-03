@@ -14,8 +14,10 @@ namespace ManagementHotel.Models
         public string? Mota { get; set; }
 
         // ChiTietHoaDon thuoc HoaDon (N-1)
+        [ForeignKey("MaHoaDon")]
         public virtual HoaDon HoaDon { get; set; } = null!;
         // ChiTietHoaDon thuoc DichVu (N-1)
+        [ForeignKey("MaDichVu")]
         public virtual DichVu? DichVu { get; set; }
     }
 }

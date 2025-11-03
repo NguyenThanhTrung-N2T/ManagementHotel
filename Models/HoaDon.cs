@@ -13,7 +13,10 @@ namespace ManagementHotel.Models
         public int TongTien { get; set; }
 
         // HoaDon thuoc DatPhong (1-1)
+        [ForeignKey("MaDatPhong")]
         public DatPhong? DatPhong { get; set; }
+        // HoaDon thuoc NhanVien (N-1)
+        [ForeignKey("MaNhanVien")]
         public virtual NhanVien NhanVien { get; set; } = null!;
         // HoaDon co nhieu ChiTietHoaDon (1-N)
         public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; } = new List<ChiTietHoaDon>();

@@ -13,6 +13,7 @@ namespace ManagementHotel.Models
         public string? TrangThai { get; set; } = "Hoạt động";
         public int MaNhanVien { get; set; }
         // Tai khoan thuoc Nhan vien (1-1)
+        [ForeignKey("MaNhanVien")]
         public NhanVien? NhanVien { get; set; }
     }
 }

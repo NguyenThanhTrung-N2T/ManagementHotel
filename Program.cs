@@ -9,14 +9,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Cấu hình routing để sử dụng URL chữ thường
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-// Cấu hình dịch vụ
+// Cấu hình dịch vụ và connect cơ sở dữ liệu
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ManagementHotelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
 // Đăng ký Services và Repositories 
 builder.Services.AddScoped<ILoaiPhongRepository, LoaiPhongRepository>();
+builder.Services.AddScoped<IPhongRepository, PhongRepository>();
 builder.Services.AddScoped<ILoaiPhongService, LoaiPhongService>();
+builder.Services.AddScoped<IPhongService, PhongService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

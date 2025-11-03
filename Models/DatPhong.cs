@@ -15,9 +15,11 @@ namespace ManagementHotel.Models
         public string? GhiChu { get; set; }
 
         // DatPhong thuoc KhachHang (N-1)
+        [ForeignKey("MaKhachHang")]
         public virtual KhachHang KhachHang { get; set; } = null!;
 
         // DatPhong thuoc Phong (N-1)
+        [ForeignKey("MaPhong")]
         public virtual Phong Phong { get; set; } = null!;
 
         // DatPhong co 1 HoaDon (1-1)

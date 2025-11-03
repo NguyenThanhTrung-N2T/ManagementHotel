@@ -99,7 +99,7 @@ namespace ManagementHotel.Repositories
             return false;
         }
 
-        // Lọc loại phòng theo khoảng giá
+        // Lọc loại phòng theo các tiêu chí
         public async Task<IEnumerable<LoaiPhongResponseDto>> FilterLoaiPhongByPriceAsync(FilterLoaiPhongRequest filter)
         {
             var query = _context.loaiPhongs.AsQueryable();
