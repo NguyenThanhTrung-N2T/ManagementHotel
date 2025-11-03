@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="DTOs\CreateLoaiPhongRequestDto.cs" />
+    <None Include="DTOs\LoaiPhong\CreateLoaiPhongRequestDto.cs" />
   </ItemGroup>
 
 </Project>
