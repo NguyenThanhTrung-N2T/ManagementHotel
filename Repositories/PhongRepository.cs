@@ -1,5 +1,6 @@
 ﻿using ManagementHotel.Data;
 using ManagementHotel.DTOs.Phong;
+using ManagementHotel.Models;
 using Microsoft.EntityFrameworkCore;
 namespace ManagementHotel.Repositories
 {
@@ -25,6 +26,50 @@ namespace ManagementHotel.Repositories
                 TrangThai = p.TrangThai,
                 GhiChu = p.GhiChu
             });
+        }
+
+        // Lấy phòng theo mã phòng
+        public async Task<PhongResponseDto> GetPhongByIdAsync(int maPhong)
+        {
+            var phong = await _context.phongs.FindAsync(maPhong);
+            if(phong != null)
+            {
+                return new PhongResponseDto
+                {
+                    MaPhong = phong.MaPhong,
+                    SoPhong = phong.SoPhong,
+                    TrangThai = phong.TrangThai,
+                    GhiChu = phong.GhiChu
+                };
+            }
+            return null!;
+        }
+
+        // Thêm phòng mới
+        public async Task<PhongResponseDto> AddPhongAsync(CreatePhongRequestDto phong)
+        {
+            try
+            {
+                var newPhong = new Phong
+                {
+                    SoPhong = phong.SoPhong,
+                    TrangThai = phong.TrangThai,
+                    GhiChu = phong.GhiChu
+                };
+                _context.phongs.Add(newPhong);
+                await _context.SaveChangesAsync();
+                return new PhongResponseDto
+                {
+                    MaPhong = newPhong.MaPhong,
+                    SoPhong = newPhong.SoPhong,
+                    TrangThai = newPhong.TrangThai,
+                    GhiChu = newPhong.GhiChu
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi thêm phòng: " + ex.Message);
+            }
         }
     }
 }

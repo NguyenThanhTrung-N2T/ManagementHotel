@@ -23,5 +23,8 @@ namespace ManagementHotel.Repositories
 
         // Lọc loại phòng theo khoảng giá
         Task<IEnumerable<LoaiPhongResponseDto>> FilterLoaiPhongByPriceAsync(FilterLoaiPhongRequest filter);
+
+        // Kiểm tra tồn tại tên loại phòng
+        Task<bool> IsLoaiPhongNameExistsAsync(string? tenLoaiPhong);
     }
 }

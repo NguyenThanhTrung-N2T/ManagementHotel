@@ -139,5 +139,11 @@ namespace ManagementHotel.Repositories
                 GiaTheoDem = lp.GiaTheoDem
             });
         }
+
+        // Kiểm tra tồn tại của tên loại phòng
+        public async Task<bool> IsLoaiPhongNameExistsAsync(string? tenLoaiPhong)
+        {
+            return await _context.loaiPhongs.AnyAsync(lp => lp.TenLoaiPhong == tenLoaiPhong);
+        }
     }
 }
