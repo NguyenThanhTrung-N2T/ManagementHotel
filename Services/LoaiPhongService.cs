@@ -23,11 +23,14 @@ namespace ManagementHotel.Services
         {
             try
             {
+                // Kiểm tra tên loại phòng đã tồn tại chưa
                 var existLoaiPhong = await _loaiPhongRepository.IsLoaiPhongNameExistsAsync(loaiPhong.TenLoaiPhong);
+                // Nếu tồn tại, ném ngoại lệ
                 if (existLoaiPhong)
                 {
                     throw new Exception("Tên loại phòng đã tồn tại.");
                 }
+                // Thêm loại phòng mới
                 return await _loaiPhongRepository.AddLoaiPhongAsync(loaiPhong);
             }
             catch (Exception ex)
@@ -47,11 +50,20 @@ namespace ManagementHotel.Services
         {
             try
             {
-                var existLoaiPhong = await _loaiPhongRepository.IsLoaiPhongNameExistsAsync(loaiPhong.TenLoaiPhong);
-                if (existLoaiPhong)
+                // Lấy thông tin loại phòng hiện tại
+                var loaiphongUpdate = await _loaiPhongRepository.GetLoaiPhongByIdAsync(maLoaiPhong);
+                // So sánh tên loại phòng mới với tên hiện tại
+                if (loaiphongUpdate.TenLoaiPhong != loaiPhong.TenLoaiPhong)
                 {
-                    throw new Exception("Tên loại phòng đã tồn tại.");
+                    // Kiểm tra tên loại phòng đã tồn tại chưa
+                    var existLoaiPhong = await _loaiPhongRepository.IsLoaiPhongNameExistsAsync(loaiPhong.TenLoaiPhong);
+                    // Nếu tồn tại, ném ngoại lệ
+                    if (existLoaiPhong)
+                    {
+                        throw new Exception("Tên loại phòng đã tồn tại.");
+                    }
                 }
+                // Cập nhật loại phòng
                 return await _loaiPhongRepository.UpdateLoaiPhongAsync(maLoaiPhong, loaiPhong);
             }
             catch (Exception ex)
@@ -63,7 +75,15 @@ namespace ManagementHotel.Services
         // Xóa loại phòng
         public async Task<bool> DeleteLoaiPhongAsync(int maLoaiPhong)
         {
-            return await _loaiPhongRepository.DeleteLoaiPhongAsync(maLoaiPhong);
+            try
+            {
+                // Xóa loại phòng
+                return await _loaiPhongRepository.DeleteLoaiPhongAsync(maLoaiPhong);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi xóa loại phòng: {ex.Message}");
+            }
         }
 
         // Lọc loại phòng theo khoảng giá

@@ -18,7 +18,9 @@ namespace ManagementHotel.Repositories
         // Lấy tất cả phòng
         public async Task<IEnumerable<PhongResponseDto>> GetAllPhongAsync()
         {
+            // Lấy tất cả phòng từ cơ sở dữ liệu
             var phongs = await _context.phongs.ToListAsync();
+            // chuyển sang dto và trả về cho client
             return phongs.Select(p => new PhongResponseDto
             {
                 MaPhong = p.MaPhong,
@@ -31,9 +33,12 @@ namespace ManagementHotel.Repositories
         // Lấy phòng theo mã phòng
         public async Task<PhongResponseDto> GetPhongByIdAsync(int maPhong)
         {
+            // Tìm phòng theo mã phòng
             var phong = await _context.phongs.FindAsync(maPhong);
-            if(phong != null)
+            // nếu tìm thấy, chuyển sang dto và trả về cho client
+            if (phong != null)
             {
+                // Trả về DTO của phòng
                 return new PhongResponseDto
                 {
                     MaPhong = phong.MaPhong,
@@ -50,14 +55,18 @@ namespace ManagementHotel.Repositories
         {
             try
             {
+                // Tạo đối tượng Phong mới từ DTO
                 var newPhong = new Phong
                 {
                     SoPhong = phong.SoPhong,
+                    MaLoaiPhong = phong.MaLoaiPhong,
                     TrangThai = phong.TrangThai,
                     GhiChu = phong.GhiChu
                 };
+                // Thêm phòng vào cơ sở dữ liệu
                 _context.phongs.Add(newPhong);
                 await _context.SaveChangesAsync();
+                // Trả về DTO của phòng vừa tạo cho client
                 return new PhongResponseDto
                 {
                     MaPhong = newPhong.MaPhong,
@@ -69,6 +78,48 @@ namespace ManagementHotel.Repositories
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi thêm phòng: " + ex.Message);
+            }
+        }
+
+        // Kiểm tra sự tồn tại của số phòng
+        public async Task<bool> IsPhongNumberExistsAsync(string? soPhong)
+        {
+            // Kiểm tra sự tồn tại của số phòng trong cơ sở dữ liệu
+            return await _context.phongs.AnyAsync(p => p.SoPhong == soPhong);
+        }
+
+        // Cập nhật thông tin phòng
+        public async Task<PhongResponseDto> UpdatePhongAsync(int maPhong, UpdatePhongRequestDto phong)
+        {
+            try
+            {
+                // Tìm phòng theo mã phòng
+                var existingPhong = await _context.phongs.FindAsync(maPhong);
+                // Nếu không tìm thấy, ném ngoại lệ
+                if (existingPhong == null)
+                {
+                    throw new Exception("Phòng không tồn tại.");
+                }
+                // Cập nhật thông tin phòng
+                existingPhong.SoPhong = phong.SoPhong;
+                existingPhong.MaLoaiPhong = phong.MaLoaiPhong;
+                existingPhong.TrangThai = phong.TrangThai;
+                existingPhong.GhiChu = phong.GhiChu;
+                // Lưu thay đổi vào cơ sở dữ liệu
+                _context.phongs.Update(existingPhong);
+                await _context.SaveChangesAsync();
+                // Trả về DTO của phòng đã cập nhật cho client
+                return new PhongResponseDto
+                {
+                    MaPhong = existingPhong.MaPhong,
+                    SoPhong = existingPhong.SoPhong,
+                    TrangThai = existingPhong.TrangThai,
+                    GhiChu = existingPhong.GhiChu
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi cập nhật phòng: " + ex.Message);
             }
         }
     }

@@ -12,5 +12,10 @@ namespace ManagementHotel.Repositories
         // Thêm phòng mới
         Task<PhongResponseDto> AddPhongAsync(CreatePhongRequestDto phong);
 
+        // Kiểm tra sự tồn tại của phòng theo số phòng
+        Task<bool> IsPhongNumberExistsAsync(string? soPhong);
+
+        // Cập nhật thông tin phòng
+        Task<PhongResponseDto> UpdatePhongAsync(int maPhong, UpdatePhongRequestDto phong);
     }
 }

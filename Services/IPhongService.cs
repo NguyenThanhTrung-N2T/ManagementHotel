@@ -11,5 +11,8 @@ namespace ManagementHotel.Services
 
         // Thêm phòng mới
         Task<PhongResponseDto> AddPhongAsync(CreatePhongRequestDto phong);
+
+        // Cập nhật thông tin phòng
+        Task<PhongResponseDto> UpdatePhongAsync(int maPhong, UpdatePhongRequestDto phong);
     }
 }
