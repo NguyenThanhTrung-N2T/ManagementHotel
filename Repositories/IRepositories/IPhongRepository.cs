@@ -1,5 +1,5 @@
 ﻿using ManagementHotel.DTOs.Phong;
-namespace ManagementHotel.Repositories
+namespace ManagementHotel.Repositories.IRepositories
 {
     public interface IPhongRepository
     {
@@ -17,5 +17,11 @@ namespace ManagementHotel.Repositories
 
         // Cập nhật thông tin phòng
         Task<PhongResponseDto> UpdatePhongAsync(int maPhong, UpdatePhongRequestDto phong);
+
+        // Xóa phòng
+        Task<bool> DeletePhongAsync(int maPhong);
+
+        // Lọc phòng theo trạng thái
+        Task<IEnumerable<PhongResponseDto>> FilterPhongByStatusAsync(FilterPhongRequest filter);
     }
 }

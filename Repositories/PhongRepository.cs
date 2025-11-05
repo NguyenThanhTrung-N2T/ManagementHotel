@@ -1,6 +1,7 @@
 ﻿using ManagementHotel.Data;
 using ManagementHotel.DTOs.Phong;
 using ManagementHotel.Models;
+using ManagementHotel.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 namespace ManagementHotel.Repositories
 {
@@ -121,6 +122,50 @@ namespace ManagementHotel.Repositories
             {
                 throw new Exception("Lỗi khi cập nhật phòng: " + ex.Message);
             }
+        }
+
+        // Xóa phòng
+        public async Task<bool> DeletePhongAsync(int maPhong)
+        {
+            try
+            {
+                // Tìm phòng theo mã phòng
+                var existingPhong = await _context.phongs.FindAsync(maPhong);
+                // Nếu không tìm thấy, trả về false
+                if (existingPhong == null)
+                {
+                    return false;
+                }
+                // Xóa phòng khỏi cơ sở dữ liệu
+                _context.phongs.Remove(existingPhong);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi xóa phòng: " + ex.Message);
+            }
+        }
+
+        // Lọc phòng theo trạng thái
+        public async Task<IEnumerable<PhongResponseDto>> FilterPhongByStatusAsync(FilterPhongRequest filter)
+        {
+            // Lấy các phòng có trạng thái phù hợp từ cơ sở dữ liệu
+            var query = _context.phongs.AsQueryable();
+            // Kiểm tra trạng thái nếu có trong filter
+            if (!string.IsNullOrEmpty(filter.TrangThai))
+            {
+                query = query.Where(p => p.TrangThai == filter.TrangThai);
+            }
+            var phongs = await query.ToListAsync();
+            // chuyển sang dto và trả về cho client
+            return phongs.Select(p => new PhongResponseDto
+            {
+                MaPhong = p.MaPhong,
+                SoPhong = p.SoPhong,
+                TrangThai = p.TrangThai,
+                GhiChu = p.GhiChu
+            });
         }
     }
 }

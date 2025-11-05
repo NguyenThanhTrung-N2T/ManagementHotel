@@ -1,6 +1,8 @@
 ﻿using ManagementHotel.Data;
 using ManagementHotel.Repositories;
+using ManagementHotel.Repositories.IRepositories;
 using ManagementHotel.Services;
+using ManagementHotel.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

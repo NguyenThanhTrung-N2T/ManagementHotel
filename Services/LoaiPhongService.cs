@@ -1,6 +1,7 @@
 ﻿using ManagementHotel.DTOs;
 using ManagementHotel.DTOs.LoaiPhong;
-using ManagementHotel.Repositories;
+using ManagementHotel.Repositories.IRepositories;
+using ManagementHotel.Services.IServices;
 
 namespace ManagementHotel.Services
 {

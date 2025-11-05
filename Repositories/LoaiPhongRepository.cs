@@ -1,6 +1,7 @@
 ﻿using ManagementHotel.Data;
 using ManagementHotel.DTOs;
 using ManagementHotel.DTOs.LoaiPhong;
+using ManagementHotel.Repositories.IRepositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 namespace ManagementHotel.Repositories
@@ -33,24 +34,32 @@ namespace ManagementHotel.Repositories
         // Thêm loại phòng mới
         public async Task<LoaiPhongResponseDto> AddLoaiPhongAsync(CreateLoaiPhongRequestDto loaiPhongNew)
         {
-            // Tạo đối tượng LoaiPhong từ DTO
-            var loaiPhong = new ManagementHotel.Models.LoaiPhong
+            try
             {
-                TenLoaiPhong = loaiPhongNew.TenLoaiPhong,
-                MoTa = loaiPhongNew.MoTa,
-                GiaTheoDem = loaiPhongNew.GiaTheoDem
-            };
-            // Thêm vào cơ sở dữ liệu
-            _context.loaiPhongs.Add(loaiPhong);
-            await _context.SaveChangesAsync();
-            // Trả về DTO của loại phòng vừa tạo cho client 
-            return new LoaiPhongResponseDto
+                // Tạo đối tượng LoaiPhong từ DTO
+                var loaiPhong = new ManagementHotel.Models.LoaiPhong
+                {
+                    TenLoaiPhong = loaiPhongNew.TenLoaiPhong,
+                    MoTa = loaiPhongNew.MoTa,
+                    GiaTheoDem = loaiPhongNew.GiaTheoDem
+                };
+                // Thêm vào cơ sở dữ liệu
+                _context.loaiPhongs.Add(loaiPhong);
+                await _context.SaveChangesAsync();
+                // Trả về DTO của loại phòng vừa tạo cho client 
+                return new LoaiPhongResponseDto
+                {
+                    MaLoaiPhong = loaiPhong.MaLoaiPhong,
+                    TenLoaiPhong = loaiPhong.TenLoaiPhong,
+                    MoTa = loaiPhong.MoTa,
+                    GiaTheoDem = loaiPhong.GiaTheoDem
+                };
+            }
+            catch (Exception ex)
             {
-                MaLoaiPhong = loaiPhong.MaLoaiPhong,
-                TenLoaiPhong = loaiPhong.TenLoaiPhong,
-                MoTa = loaiPhong.MoTa,
-                GiaTheoDem = loaiPhong.GiaTheoDem
-            };
+                throw new Exception($"Lỗi khi thêm loại phòng: {ex.Message}");
+
+            }
         }
 
         // Lấy thông tin loại phòng theo mã loại phòng
@@ -75,27 +84,34 @@ namespace ManagementHotel.Repositories
         // Cập nhật loại phòng
         public async Task<LoaiPhongResponseDto> UpdateLoaiPhongAsync(int maLoaiPhong, UpdateLoaiPhongRequestDto loaiPhongUpdate)
         {
-            // Tìm loại phòng theo mã
-            var loaiPhong = await _context.loaiPhongs.FindAsync(maLoaiPhong);
-            // Nếu tìm thấy, cập nhật thông tin và lưu thay đổi
-            if (loaiPhong != null)
+            try
             {
-                // Cập nhật thông tin
-                loaiPhong.TenLoaiPhong = loaiPhongUpdate.TenLoaiPhong;
-                loaiPhong.MoTa = loaiPhongUpdate.MoTa;
-                loaiPhong.GiaTheoDem = loaiPhongUpdate.GiaTheoDem;
-                // Lưu thay đổi vào cơ sở dữ liệu
-                await _context.SaveChangesAsync();
-                // Trả về DTO của loại phòng đã cập nhật cho client
-                return new LoaiPhongResponseDto
+                // Tìm loại phòng theo mã
+                var loaiPhong = await _context.loaiPhongs.FindAsync(maLoaiPhong);
+                // Nếu tìm thấy, cập nhật thông tin và lưu thay đổi
+                if (loaiPhong != null)
                 {
-                    MaLoaiPhong = loaiPhong.MaLoaiPhong,
-                    TenLoaiPhong = loaiPhong.TenLoaiPhong,
-                    MoTa = loaiPhong.MoTa,
-                    GiaTheoDem = loaiPhong.GiaTheoDem
-                };
+                    // Cập nhật thông tin
+                    loaiPhong.TenLoaiPhong = loaiPhongUpdate.TenLoaiPhong;
+                    loaiPhong.MoTa = loaiPhongUpdate.MoTa;
+                    loaiPhong.GiaTheoDem = loaiPhongUpdate.GiaTheoDem;
+                    // Lưu thay đổi vào cơ sở dữ liệu
+                    await _context.SaveChangesAsync();
+                    // Trả về DTO của loại phòng đã cập nhật cho client
+                    return new LoaiPhongResponseDto
+                    {
+                        MaLoaiPhong = loaiPhong.MaLoaiPhong,
+                        TenLoaiPhong = loaiPhong.TenLoaiPhong,
+                        MoTa = loaiPhong.MoTa,
+                        GiaTheoDem = loaiPhong.GiaTheoDem
+                    };
+                }
+                return null!;
             }
-            return null!;
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi cập nhật loại phòng: {ex.Message}");
+            }
         }
 
         // Xóa loại phòng

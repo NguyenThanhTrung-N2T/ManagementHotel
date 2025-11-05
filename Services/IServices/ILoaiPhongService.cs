@@ -1,7 +1,7 @@
 ﻿using ManagementHotel.DTOs;
 using ManagementHotel.DTOs.LoaiPhong;
 
-namespace ManagementHotel.Services
+namespace ManagementHotel.Services.IServices
 {
     public interface ILoaiPhongService
     {

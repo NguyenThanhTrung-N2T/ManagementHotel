@@ -1,6 +1,6 @@
 ﻿using ManagementHotel.DTOs;
 using ManagementHotel.DTOs.LoaiPhong;
-using ManagementHotel.Services;
+using ManagementHotel.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

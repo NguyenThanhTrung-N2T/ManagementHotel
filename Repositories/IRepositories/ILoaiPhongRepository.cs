@@ -2,7 +2,7 @@
 using ManagementHotel.DTOs.LoaiPhong;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ManagementHotel.Repositories
+namespace ManagementHotel.Repositories.IRepositories
 {
     public interface ILoaiPhongRepository
     {

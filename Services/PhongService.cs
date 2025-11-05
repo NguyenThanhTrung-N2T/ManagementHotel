@@ -1,5 +1,6 @@
 ﻿using ManagementHotel.DTOs.Phong;
-using ManagementHotel.Repositories;
+using ManagementHotel.Repositories.IRepositories;
+using ManagementHotel.Services.IServices;
 namespace ManagementHotel.Services
 {
     public class PhongService : IPhongService
@@ -68,6 +69,26 @@ namespace ManagementHotel.Services
             {
                 throw new Exception("Lỗi khi cập nhật phòng: " + ex.Message);
             }
+        }
+
+        // Xóa phòng
+        public async Task<bool> DeletePhongAsync(int maPhong)
+        {
+            try
+            {
+                // Xóa phòng
+                return await _phongRepository.DeletePhongAsync(maPhong);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi xóa phòng: " + ex.Message);
+            }
+        }
+
+        // Lọc phòng theo trạng thái
+        public async Task<IEnumerable<PhongResponseDto>> FilterPhongByStatusAsync(FilterPhongRequest filter)
+        {
+            return await _phongRepository.FilterPhongByStatusAsync(filter);
         }
     }
 }

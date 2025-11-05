@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ManagementHotel.Services;
 using ManagementHotel.DTOs.Phong;
+using ManagementHotel.Services.IServices;
 
 namespace ManagementHotel.Controllers
 {
@@ -69,6 +69,32 @@ namespace ManagementHotel.Controllers
             var updatedPhong = await _phongService.UpdatePhongAsync(maPhong, phong);
             // Trả về kết quả
             return Ok(updatedPhong);
+        }
+
+        // Delete : api/phongs/{maPhong} : Xóa phòng
+        [HttpDelete("{maPhong}")]
+        public async Task<IActionResult> DeletePhong(int maPhong)
+        {
+            // Xóa phòng
+            var result = await _phongService.DeletePhongAsync(maPhong);
+            // Kiểm tra kết quả
+            if (!result)
+            {
+                // Nếu không tìm thấy, trả về 404
+                return NotFound();
+            }
+            // Trả về kết quả
+            return NoContent();
+        }
+
+        // Get : api/phongs/filter : Lọc phòng theo trạng thái
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterPhongByStatus([FromQuery] FilterPhongRequest filter)
+        {
+            // Lọc phòng theo trạng thái
+            var phongs = await _phongService.FilterPhongByStatusAsync(filter);
+            // Trả về kết quả
+            return Ok(phongs);
         }
     }
 }
