@@ -157,6 +157,11 @@ namespace ManagementHotel.Repositories
             {
                 query = query.Where(p => p.TrangThai == filter.TrangThai);
             }
+            // Kiểm tra mã loại phòng nếu có trong filter
+            if (filter.MaLoaiPhong.HasValue)
+            {
+                query = query.Where(p => p.MaLoaiPhong == filter.MaLoaiPhong.Value);
+            }
             var phongs = await query.ToListAsync();
             // chuyển sang dto và trả về cho client
             return phongs.Select(p => new PhongResponseDto

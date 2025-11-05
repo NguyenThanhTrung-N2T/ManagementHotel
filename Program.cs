@@ -19,8 +19,10 @@ builder.Services.AddDbContext<ManagementHotelContext>(options =>
 // Đăng ký Services và Repositories 
 builder.Services.AddScoped<ILoaiPhongRepository, LoaiPhongRepository>();
 builder.Services.AddScoped<IPhongRepository, PhongRepository>();
+builder.Services.AddScoped<IKhachHangRepository, KhachHangRepository>();
 builder.Services.AddScoped<ILoaiPhongService, LoaiPhongService>();
 builder.Services.AddScoped<IPhongService, PhongService>();
+builder.Services.AddScoped<IKhachHangService, KhachHangService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

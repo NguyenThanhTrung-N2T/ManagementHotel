@@ -6,5 +6,6 @@ namespace ManagementHotel.DTOs.Phong
     {
         [MaxLength(15)]
         public string? TrangThai { get; set; }
+        public int? MaLoaiPhong { get; set; }
     }
 }
