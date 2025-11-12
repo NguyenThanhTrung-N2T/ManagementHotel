@@ -1,6 +1,7 @@
 ﻿using ManagementHotel.Data;
 using ManagementHotel.DTOs;
 using ManagementHotel.DTOs.LoaiPhong;
+using ManagementHotel.Models;
 using ManagementHotel.Repositories.IRepositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -89,24 +90,24 @@ namespace ManagementHotel.Repositories
                 // Tìm loại phòng theo mã
                 var loaiPhong = await _context.loaiPhongs.FindAsync(maLoaiPhong);
                 // Nếu tìm thấy, cập nhật thông tin và lưu thay đổi
-                if (loaiPhong != null)
+                if (loaiPhong == null)
                 {
-                    // Cập nhật thông tin
-                    loaiPhong.TenLoaiPhong = loaiPhongUpdate.TenLoaiPhong;
-                    loaiPhong.MoTa = loaiPhongUpdate.MoTa;
-                    loaiPhong.GiaTheoDem = loaiPhongUpdate.GiaTheoDem;
-                    // Lưu thay đổi vào cơ sở dữ liệu
-                    await _context.SaveChangesAsync();
-                    // Trả về DTO của loại phòng đã cập nhật cho client
-                    return new LoaiPhongResponseDto
-                    {
-                        MaLoaiPhong = loaiPhong.MaLoaiPhong,
-                        TenLoaiPhong = loaiPhong.TenLoaiPhong,
-                        MoTa = loaiPhong.MoTa,
-                        GiaTheoDem = loaiPhong.GiaTheoDem
-                    };
+                    throw new Exception("Loại phòng không tồn tại.");
                 }
-                return null!;
+                // Cập nhật thông tin
+                loaiPhong.TenLoaiPhong = loaiPhongUpdate.TenLoaiPhong;
+                loaiPhong.MoTa = loaiPhongUpdate.MoTa;
+                loaiPhong.GiaTheoDem = loaiPhongUpdate.GiaTheoDem;
+                // Lưu thay đổi vào cơ sở dữ liệu
+                await _context.SaveChangesAsync();
+                // Trả về DTO của loại phòng đã cập nhật cho client
+                return new LoaiPhongResponseDto
+                {
+                    MaLoaiPhong = loaiPhong.MaLoaiPhong,
+                    TenLoaiPhong = loaiPhong.TenLoaiPhong,
+                    MoTa = loaiPhong.MoTa,
+                    GiaTheoDem = loaiPhong.GiaTheoDem
+                };
             }
             catch (Exception ex)
             {

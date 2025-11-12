@@ -28,7 +28,7 @@ namespace ManagementHotel.Controllers
 
         // Get : api/nhanviens/{maNhanVien}
         [HttpGet("{maNhanVien}")]
-        public async Task<IActionResult> GetNhanVienByIdAsync(int maNhanVien)
+        public async Task<IActionResult> GetNhanVienById(int maNhanVien)
         {
             // lấy nhân viên theo mã nhân viên 
             var nhanvien = await _nhanVienService.GetNhanVienByIdAsync(maNhanVien);
@@ -41,6 +41,65 @@ namespace ManagementHotel.Controllers
             return Ok(nhanvien);
         }
 
+        // Post : api/nhanviens
+        [HttpPost]
+        public async Task<IActionResult> CreateNhanVien(CreateNhanVienRequestDto nhanviendto) 
+        {
+            // Kiểm tra thông tin dto hợp lệ
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Thêm nhân viên mới 
+            var nhanVienNew = await _nhanVienService.AddNhanVienAsync(nhanviendto);
+            // Trả về cho client 201 Created
+            return CreatedAtAction(nameof(GetNhanVienById), new { maNhanVien = nhanVienNew.MaNhanVien }, nhanVienNew);
+        }
+
+
+        // Put : api/nhanviens/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateNhanVien(int id, [FromBody] UpdateNhanVienRequestDto updateNhanVien)
+        {
+            // kiểm tra thông tin đầu vào
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            // cập nhật thông tin 
+            var nhanVienUpdate = await _nhanVienService.UpdateNhanVienAsync(id, updateNhanVien);
+            // trả về client
+            return Ok(nhanVienUpdate);
+
+        }
+
+        // Delete : api/nhanviens/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteNhanVien(int id)
+        {
+            // xóa nhân viên 
+            var response = await _nhanVienService.DeleteNhanVienAsync(id);
+            // kiểm tra kết quả
+            if (response)
+            {
+                // trả về kết quả
+                return NoContent();
+            }
+            // nếu không , trả về 404
+            return NotFound();
+        }
+
+        // Get : api/nhanviens/filter
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterNhanVien([FromQuery] FilterNhanVienRequestDto filter)
+        {
+            // lọc lấy nhân viên 
+            var nhanviens = await _nhanVienService.FilterNhanVienAsync(filter);
+            // trả về client
+            return Ok(nhanviens);
+        }
 
     }
 }

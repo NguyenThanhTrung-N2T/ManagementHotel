@@ -26,6 +26,6 @@ namespace ManagementHotel.DTOs.NhanVien
 
         [Required(ErrorMessage = "Lương không được để trống !")]
         [Range(0, double.MaxValue, ErrorMessage = "Lương phải lớn hơn 0 !")]
-        public decimal Luong { get; set; }
+        public int Luong { get; set; }
     }
 }

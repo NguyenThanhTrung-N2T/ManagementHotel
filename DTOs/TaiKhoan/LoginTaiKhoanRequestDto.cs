@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ManagementHotel.DTOs
+namespace ManagementHotel.DTOs.TaiKhoan
 {
     public class LoginTaiKhoanRequestDto
     {
