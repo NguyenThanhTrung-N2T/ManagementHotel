@@ -58,9 +58,9 @@ namespace ManagementHotel.Controllers
         }
 
 
-        // Put : api/nhanviens/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateNhanVien(int id, [FromBody] UpdateNhanVienRequestDto updateNhanVien)
+        // Put : api/nhanviens/{maNhanVien}
+        [HttpPut("{maNhanVien}")]
+        public async Task<IActionResult> UpdateNhanVien(int maNhanVien, [FromBody] UpdateNhanVienRequestDto updateNhanVien)
         {
             // kiểm tra thông tin đầu vào
             if (!ModelState.IsValid)
@@ -69,18 +69,18 @@ namespace ManagementHotel.Controllers
             }
             
             // cập nhật thông tin 
-            var nhanVienUpdate = await _nhanVienService.UpdateNhanVienAsync(id, updateNhanVien);
+            var nhanVienUpdate = await _nhanVienService.UpdateNhanVienAsync(maNhanVien, updateNhanVien);
             // trả về client
             return Ok(nhanVienUpdate);
 
         }
 
-        // Delete : api/nhanviens/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNhanVien(int id)
+        // Delete : api/nhanviens/{maNhanVien}
+        [HttpDelete("{maNhanVien}")]
+        public async Task<IActionResult> DeleteNhanVien(int maNhanVien)
         {
             // xóa nhân viên 
-            var response = await _nhanVienService.DeleteNhanVienAsync(id);
+            var response = await _nhanVienService.DeleteNhanVienAsync(maNhanVien);
             // kiểm tra kết quả
             if (response)
             {
