@@ -180,6 +180,7 @@ namespace ManagementHotel.Repositories
             }
         }
 
+        // lọc nhân viên theo thuộc tính
         public async Task<IEnumerable<NhanVienResponseDto>> FilterNhanVienAsync(FilterNhanVienRequestDto filter)
         {
             // tạo truy vấn 

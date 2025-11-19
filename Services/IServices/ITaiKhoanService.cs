@@ -15,5 +15,8 @@ namespace ManagementHotel.Services.IServices
 
         // Xóa tài khoản 
         Task<bool> DeleteTaiKhoanAsync(int maTaiKhoan);
+
+        // đăng nhập tài khoản 
+        Task<bool> LoginTaiKhoanAsync(LoginTaiKhoanRequestDto loginTaiKhoanRequestDto);
     }
 }

@@ -20,5 +20,11 @@ namespace ManagementHotel.Repositories.IRepositories
 
         // Xóa tài khoản 
         Task<bool> DeleteTaiKhoanAsync(int maTaiKhoan);
+
+        // kiểm tài khoản theo tên đăng nhập
+        Task<bool> IsExistTaiKhoan(string? tenDangNhap);
+
+        // đăng nhập 
+        Task<bool> LoginTaiKhoanAsync(LoginTaiKhoanRequestDto requestDto);
     }
 }

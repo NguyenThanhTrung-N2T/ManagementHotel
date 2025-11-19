@@ -70,5 +70,24 @@ namespace ManagementHotel.Services
                 throw new Exception("Lỗi khi xóa tài khoản.", ex);
             }
         }
+
+        // kiểm tra tài khoản 
+        public async Task<bool> LoginTaiKhoanAsync(LoginTaiKhoanRequestDto loginTaiKhoanRequestDto)
+        {
+            // check tồn tại tài khoản 
+            bool isExistTK = await _taiKhoanRepository.IsTenDangNhapExist(loginTaiKhoanRequestDto.TenDangNhap);
+            if (!isExistTK)
+            {
+                throw new Exception("Tài khoản không tồn tại.");
+            }
+
+            // đăng nhập tài khoản 
+            bool isLogin = await _taiKhoanRepository.LoginTaiKhoanAsync(loginTaiKhoanRequestDto);
+            if (isLogin)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

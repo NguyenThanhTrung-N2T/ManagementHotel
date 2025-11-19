@@ -115,5 +115,27 @@ namespace ManagementHotel.Repositories
                 throw new Exception($"Lỗi khi xóa tài khoản: {ex.Message}");
             }
         }
+
+        // lấy tài khoản theo tên đăng nhập
+        public async Task<bool> IsExistTaiKhoan(string? tenDangNhap)
+        {
+            return await _context.taiKhoans.AnyAsync(tk => tk.TenDangNhap == tenDangNhap);
+        }
+
+        // đăng nhập tài khoản 
+        public async Task<bool> LoginTaiKhoanAsync(LoginTaiKhoanRequestDto requestDto)
+        {
+            // lấy tài khoản trong db
+            var taikhoan = await _context.taiKhoans.FirstOrDefaultAsync(tk => tk.TenDangNhap == requestDto.TenDangNhap);
+
+            // check mật khẩu 
+            bool checkMK = BCrypt.Net.BCrypt.Verify(requestDto.MatKhau, taikhoan?.MatKhau);
+
+            if (checkMK)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -75,5 +75,18 @@ namespace ManagementHotel.Controllers
             // Trả về kết quả
             return NoContent();
         }
+
+        // Post : api/taikhoans/login
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginTaiKhoan([FromBody] LoginTaiKhoanRequestDto loginTaiKhoanRequestDto)
+        {
+            // kiểm tra tài khoản 
+            var result = await _taiKhoanService.LoginTaiKhoanAsync(loginTaiKhoanRequestDto);
+            if (!result) {
+                return NotFound("Mật khẩu tài khoản sai.");
+            }
+            return Ok("Đăng nhập thành công.");
+        }
+
     }
 }

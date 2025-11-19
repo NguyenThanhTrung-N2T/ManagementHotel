@@ -7,6 +7,6 @@ namespace ManagementHotel.DTOs.TaiKhoan
         [Required(ErrorMessage = "Tên đăng nhập không được để trống.")]
         public string? TenDangNhap { get; set; }
         [Required(ErrorMessage = "Mật khẩu không được để trống.")]
-        public string? MatKhau { get; set; }
+        public string? MatKhau { get; set; } 
     }
 }
