@@ -13,6 +13,9 @@ namespace ManagementHotel.Services.IServices
         // lấy tài khoản theo mã tài  khoản 
         Task<TaiKhoanResponseDto> GetTaiKhoanByIdAsync(int maTaiKhoan);
 
+        // lấy tài khoản theo tên đăng nhập
+        Task<TaiKhoanResponseDto> GetTaiKhoanByTenDangNhapAsync(string tenDangNhap);
+
         // Xóa tài khoản 
         Task<bool> DeleteTaiKhoanAsync(int maTaiKhoan);
 

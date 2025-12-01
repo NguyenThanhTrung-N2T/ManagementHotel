@@ -50,6 +50,12 @@ namespace ManagementHotel.Services
             return await _taiKhoanRepository.GetTaiKhoanByIdAsync(maTaiKhoan);
         }
 
+        // lấy tài khoản theo tên đăng nhập 
+        public async Task<TaiKhoanResponseDto> GetTaiKhoanByTenDangNhapAsync(string tenDangNhap)
+        {
+            return await _taiKhoanRepository.GetTaiKhoanByTenDangNhapAsync(tenDangNhap);
+        }
+
         // xóa tài khoản
         public async Task<bool> DeleteTaiKhoanAsync(int maTaiKhoan)
         {
@@ -79,6 +85,12 @@ namespace ManagementHotel.Services
             if (!isExistTK)
             {
                 throw new Exception("Tài khoản không tồn tại.");
+            }
+            // kiểm tra tài khoản có hoạt động không
+            bool isActiveTK = await _taiKhoanRepository.IsTaiKhoanActive(loginTaiKhoanRequestDto.TenDangNhap);
+            if (!isActiveTK)
+            {
+                throw new Exception("Tài khoản không còn hoạt động.");
             }
 
             // đăng nhập tài khoản 

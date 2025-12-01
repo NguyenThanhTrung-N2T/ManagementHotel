@@ -1,4 +1,5 @@
 ﻿using ManagementHotel.DTOs.TaiKhoan;
+using ManagementHotel.Helpers;
 using ManagementHotel.Models;
 using ManagementHotel.Services;
 using ManagementHotel.Services.IServices;
@@ -13,10 +14,12 @@ namespace ManagementHotel.Controllers
     public class TaiKhoansController : ControllerBase
     {
         private readonly ITaiKhoanService _taiKhoanService;
+        private readonly JwtTokenService _jwtTokenService;
 
-        public TaiKhoansController(ITaiKhoanService taiKhoanService)
+        public TaiKhoansController(ITaiKhoanService taiKhoanService, JwtTokenService jwtTokenService)
         {
             _taiKhoanService = taiKhoanService;
+            _jwtTokenService = jwtTokenService;
         }
 
         // Get : api/taikhoans : lấy tất cả tài khoản
@@ -85,8 +88,32 @@ namespace ManagementHotel.Controllers
             if (!result) {
                 return NotFound("Mật khẩu tài khoản sai.");
             }
-            return Ok("Đăng nhập thành công.");
-        }
+            var taiKhoan = await _taiKhoanService.GetTaiKhoanByTenDangNhapAsync(loginTaiKhoanRequestDto.TenDangNhap!);
+            if (taiKhoan == null)
+            {
+                return NotFound("Tài khoản không tồn tại.");
+            }
+            // tạo token
+            var token = _jwtTokenService.GenerateToken(maTaiKhoan: taiKhoan.MaTaiKhoan.ToString(),
+                                                       tenDangNhap: taiKhoan.TenDangNhap!,
+                                                        vaiTro: taiKhoan.VaiTro!,
+                                                        trangThai: taiKhoan.TrangThai!);
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true, // HTTPS
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddHours(8)
+            };
+            Response.Cookies.Append("AccessToken", token, cookieOptions);
 
+            // trả về client
+            return Ok(new
+            {
+                message = "Đăng nhập thành công",
+                role = taiKhoan.VaiTro
+            });
+
+        }
     }
 }

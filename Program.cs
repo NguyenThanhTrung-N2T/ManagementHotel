@@ -1,12 +1,111 @@
-﻿using ManagementHotel.Data;
+﻿using ManagementHotel.Configs;
+using ManagementHotel.Data;
+using ManagementHotel.Helpers;
 using ManagementHotel.Repositories;
 using ManagementHotel.Repositories.IRepositories;
 using ManagementHotel.Services;
 using ManagementHotel.Services.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Bind settings
+var jwtConfig = new JwtConfig();
+builder.Configuration.GetSection("JwtConfig").Bind(jwtConfig);
+builder.Services.AddSingleton(jwtConfig);
+
+// Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    // Thêm Event để lấy token từ cookie
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            if (context.Request.Cookies.ContainsKey("AccessToken"))
+            {
+                context.Token = context.Request.Cookies["AccessToken"];
+            }
+            return Task.CompletedTask;
+
+
+        },
+
+        OnAuthenticationFailed = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+
+            var response = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                message = "Token không hợp lệ hoặc đã hết hạn"
+            });
+
+            return context.Response.WriteAsync(response);
+        },
+
+        OnForbidden = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            context.Response.ContentType = "application/json";
+
+            var response = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                message = "Bạn không có quyền truy cập tài nguyên này"
+            });
+
+            return context.Response.WriteAsync(response);
+        }
+    };
+
+
+    // Cấu hình xác thực token
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtConfig.Issuer,
+        ValidAudience = jwtConfig.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.SecretKey))
+    };
+});
+
+// Authorization với các policy
+builder.Services.AddAuthorization(options =>
+{
+    // Policy cho Admin ACTIVE
+    options.AddPolicy("AdminActive", policy =>
+    {
+        policy.RequireRole("Admin");                     // role = Admin
+        policy.RequireClaim("Status", "Hoạt động");      // status = Hoạt động
+    });
+
+    // Policy cho Nhân viên ACTIVE
+    options.AddPolicy("StaffActive", policy =>
+    {
+        policy.RequireRole("Nhân viên");
+        policy.RequireClaim("Status", "Hoạt động");      // status = Hoạt động
+    });
+
+    // Policy chung Admin + Nhân viên ACTIVE
+    options.AddPolicy("ActiveUser", policy =>
+    {
+        policy.RequireRole("Admin", "Nhân viên");
+        policy.RequireClaim("Status", "Hoạt động");
+    });
+});
+
+builder.Services.AddSingleton<JwtTokenService>();
 
 // Cấu hình routing để sử dụng URL chữ thường
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
@@ -64,6 +163,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

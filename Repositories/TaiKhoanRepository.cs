@@ -72,6 +72,19 @@ namespace ManagementHotel.Repositories
             return await _context.taiKhoans.AnyAsync(tk => tk.TenDangNhap == tenDangNhap);
         }
 
+        // kiểm tra tài khoản còn hoạt động
+        public async Task<bool> IsTaiKhoanActive(string? tenDangNhap)
+        {
+            // lấy tài khoản từ db
+            var taiKhoan = await _context.taiKhoans.FirstOrDefaultAsync(tk => tk.TenDangNhap == tenDangNhap);
+            // kiểm tra trạng thái 
+            if (taiKhoan != null && taiKhoan.TrangThai == "Hoạt động")
+            {
+                return true;
+            }
+            return false;
+        }
+
         // lấy tài khoản theo mã tài khoản 
         public async Task<TaiKhoanResponseDto> GetTaiKhoanByIdAsync(int maTaiKhoan)
         {
@@ -84,6 +97,26 @@ namespace ManagementHotel.Repositories
                 return null!;
             }
 
+            // trả về client 
+            return new TaiKhoanResponseDto
+            {
+                MaTaiKhoan = taiKhoan.MaTaiKhoan,
+                TenDangNhap = taiKhoan.TenDangNhap,
+                VaiTro = taiKhoan.VaiTro,
+                TrangThai = taiKhoan.TrangThai
+            };
+        }
+
+        // lấy tài khoản theo tên đăng nhập
+        public async Task<TaiKhoanResponseDto> GetTaiKhoanByTenDangNhapAsync(string? tenDangNhap)
+        {
+            // lấy tài khoản từ db
+            var taiKhoan = await _context.taiKhoans.FirstOrDefaultAsync(tk => tk.TenDangNhap == tenDangNhap);
+            // nếu không có 
+            if (taiKhoan == null)
+            {
+                return null!;
+            }
             // trả về client 
             return new TaiKhoanResponseDto
             {

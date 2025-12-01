@@ -10,7 +10,8 @@ namespace ManagementHotel.DTOs.TaiKhoan
         public string? TenDangNhap {  get; set; }
 
         [Required(ErrorMessage = "Mật khẩu không được để trống !")]
-        [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",ErrorMessage = "Password phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$",ErrorMessage = "Password phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt")]
+
         public string? MatKhau { get; set; }
 
         [Required(ErrorMessage = "Vai trò của tài khoản không được bỏ trống !")]

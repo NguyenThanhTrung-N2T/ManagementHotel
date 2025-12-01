@@ -15,8 +15,14 @@ namespace ManagementHotel.Repositories.IRepositories
         // Kiểm tra tên đang nhập tồn tại 
         Task<bool> IsTenDangNhapExist(string? tenDangNhap);
 
+        // kiểm tra tài khoản còn hoạt động
+        Task<bool> IsTaiKhoanActive(string? tenDangNhap);
+
         // Lấy tài khoản theo mã tài khoản 
         Task<TaiKhoanResponseDto> GetTaiKhoanByIdAsync(int maTaiKhoan);
+
+        // lấy tài khoản theo tên đăng nhập
+        Task<TaiKhoanResponseDto> GetTaiKhoanByTenDangNhapAsync(string? tenDangNhap);
 
         // Xóa tài khoản 
         Task<bool> DeleteTaiKhoanAsync(int maTaiKhoan);

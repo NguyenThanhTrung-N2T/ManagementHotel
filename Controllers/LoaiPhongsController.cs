@@ -1,6 +1,7 @@
 ﻿using ManagementHotel.DTOs;
 using ManagementHotel.DTOs.LoaiPhong;
 using ManagementHotel.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Post : api/loaiphongs : Thêm loại phòng mới
+        [Authorize(Policy = "AdminActive")]
         [HttpPost]
         public async Task<IActionResult> AddLoaiPhong([FromBody] CreateLoaiPhongRequestDto loaiPhong)
         {
