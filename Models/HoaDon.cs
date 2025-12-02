@@ -11,6 +11,7 @@ namespace ManagementHotel.Models
         public int MaNhanVien { get; set; }
         public DateTime NgayLap { get; set; } = DateTime.Now;
         public int TongTien { get; set; }
+        public string? TrangThaiThanhToan { get; set; } = "Chưa thanh toán";
 
         // HoaDon thuoc DatPhong (1-1)
         [ForeignKey("MaDatPhong")]

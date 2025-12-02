@@ -1,0 +1,12 @@
+﻿using ManagementHotel.DTOs.DatPhong;
+namespace ManagementHotel.Services.IServices
+{
+    public interface IDatPhongService
+    {
+        // lấy tất cả đặt phòng
+        Task<IEnumerable<DatPhongListResponseDto>> GetAllDatPhongsAsync();
+
+        // lấy chi tiết đặt phòng theo mã đặt phòng
+        Task<DatPhongResponseDto?> GetDatPhongByIdAsync(int maDatPhong);
+    }
+}
