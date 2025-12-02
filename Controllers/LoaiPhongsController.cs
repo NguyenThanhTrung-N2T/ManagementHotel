@@ -44,6 +44,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/loaiphongs/{maloaiphong} : Lấy thông tin loại phòng theo mã loại phòng
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet("{maloaiphong}")]
         public async Task<IActionResult> GetLoaiPhongById(int maloaiphong)
         {
@@ -60,6 +61,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Put : api/loaiphongs/{maloaiphong} : Cập nhật loại phòng
+        [Authorize(Policy = "ActiveUser")]
         [HttpPut("{maloaiphong}")]
         public async Task<IActionResult> UpdateLoaiPhong(int maloaiphong, [FromBody] UpdateLoaiPhongRequestDto loaiPhong)
         {
@@ -81,6 +83,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Delete : api/loaiphongs/{maloaiphong} : Xóa loại phòng
+        [Authorize(Policy = "AdminActive")]
         [HttpDelete("{maloaiphong}")]
         public async Task<IActionResult> DeleteLoaiPhong(int maloaiphong)
         {

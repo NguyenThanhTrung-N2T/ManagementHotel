@@ -3,6 +3,7 @@ using ManagementHotel.DTOs.KhachHang;
 using ManagementHotel.DTOs.LoaiPhong;
 using ManagementHotel.Services;
 using ManagementHotel.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/dichvus/{maDichVu} : lay dich vu theo ma dich vu
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet("{maDichVu}")]
         public async Task<IActionResult> GetDichVuById(int maDichVu)
         {
@@ -45,6 +47,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Post : api/dichvus : Thêm dich vu mới
+        [Authorize(Policy = "AdminActive")]
         [HttpPost]
         public async Task<IActionResult> AddDichVu([FromBody] CreateDichVuRequestDto requestDto)
         {
@@ -60,6 +63,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Put : api/dichvus/{maDichVu} : Cập nhật dich vu
+        [Authorize(Policy = "ActiveUser")]
         [HttpPut("{maDichVu}")]
         public async Task<IActionResult> UpdateDichVu(int maDichVu, [FromBody] UpdateDichVuRequestDto dichvu)
         {
@@ -76,6 +80,7 @@ namespace ManagementHotel.Controllers
 
 
         // Delete : api/dichvus/{maDichVu} : Xóa dịch vụ
+        [Authorize(Policy = "AdminActive")]
         [HttpDelete("{maDichVu}")]
         public async Task<IActionResult> DeleteDichVu(int maDichVu)
         {

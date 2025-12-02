@@ -30,15 +30,30 @@ builder.Services.AddAuthentication(options =>
     {
         OnMessageReceived = context =>
         {
-            if (context.Request.Cookies.ContainsKey("AccessToken"))
+            if (context.Request.Cookies.TryGetValue("AccessToken", out var token))
             {
-                context.Token = context.Request.Cookies["AccessToken"];
+                context.Token = token;
             }
             return Task.CompletedTask;
-
-
         },
 
+        // Không gửi token
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+
+            var response = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                message = "Unauthorized"
+            });
+
+            return context.Response.WriteAsync(response);
+        },
+
+        // Token sai / hết hạn
         OnAuthenticationFailed = context =>
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -52,6 +67,7 @@ builder.Services.AddAuthentication(options =>
             return context.Response.WriteAsync(response);
         },
 
+        // Role/Claim không đủ quyền
         OnForbidden = context =>
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -65,6 +81,7 @@ builder.Services.AddAuthentication(options =>
             return context.Response.WriteAsync(response);
         }
     };
+
 
 
     // Cấu hình xác thực token

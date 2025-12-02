@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ManagementHotel.Services.IServices;
 using ManagementHotel.DTOs.KhachHang;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ManagementHotel.Controllers
 {
@@ -16,6 +17,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/khachhangs : Lấy tất cả khách hàng
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet]
         public async Task<IActionResult> GetAllKhachHang()
         {
@@ -26,6 +28,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/khachhangs/{maKhachHang} : Lấy khách hàng theo mã khách hàng
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet("{maKhachHang}")]
         public async Task<IActionResult> GetKhachHangById(int maKhachHang)
         {
@@ -41,6 +44,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Post : api/khachhangs : Thêm khách hàng mới
+        [Authorize(Policy = "ActiveUser")]
         [HttpPost]
         public async Task<IActionResult> AddKhachHang([FromBody] CreateKhachHangRequestDto khachHang)
         {
@@ -56,6 +60,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Put : api/khachhangs/{maKhachHang} : Cập nhật khách hàng
+        [Authorize(Policy = "ActiveUser")]
         [HttpPut("{maKhachHang}")]
         public async Task<IActionResult> UpdateKhachHang(int maKhachHang, [FromBody] UpdateKhachHangRequest khachHang)
         {
@@ -71,6 +76,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Delete : api/khachhangs/{maKhachHang} : Xóa khách hàng
+        [Authorize(Policy = "ActiveUser")]
         [HttpDelete("{maKhachHang}")]
         public async Task<IActionResult> DeleteKhachHang(int maKhachHang)
         {
@@ -86,6 +92,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/khachhangs/filter : Lọc khách hàng theo tên hoặc CCCD , số điện thoại
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet("filter")]
         public async Task<IActionResult> FilterKhachHang([FromQuery] FilterKhachHangRequestDto filter)
         {

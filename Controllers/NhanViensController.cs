@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ManagementHotel.DTOs.NhanVien;
 using ManagementHotel.Services.IServices;
-using ManagementHotel.DTOs.NhanVien;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace ManagementHotel.Controllers
@@ -17,6 +18,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/nhanviens 
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet]
         public async Task<IActionResult> GetAllNhanVien()
         {
@@ -27,6 +29,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/nhanviens/{maNhanVien}
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet("{maNhanVien}")]
         public async Task<IActionResult> GetNhanVienById(int maNhanVien)
         {
@@ -42,6 +45,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Post : api/nhanviens
+        [Authorize(Policy = "AdminActive")]
         [HttpPost]
         public async Task<IActionResult> CreateNhanVien(CreateNhanVienRequestDto nhanviendto) 
         {
@@ -59,6 +63,7 @@ namespace ManagementHotel.Controllers
 
 
         // Put : api/nhanviens/{maNhanVien}
+        [Authorize(Policy = "AdminActive")]
         [HttpPut("{maNhanVien}")]
         public async Task<IActionResult> UpdateNhanVien(int maNhanVien, [FromBody] UpdateNhanVienRequestDto updateNhanVien)
         {
@@ -76,6 +81,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Delete : api/nhanviens/{maNhanVien}
+        [Authorize(Policy = "AdminActive")]
         [HttpDelete("{maNhanVien}")]
         public async Task<IActionResult> DeleteNhanVien(int maNhanVien)
         {
@@ -92,6 +98,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/nhanviens/filter
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet("filter")]
         public async Task<IActionResult> FilterNhanVien([FromQuery] FilterNhanVienRequestDto filter)
         {

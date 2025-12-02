@@ -3,6 +3,7 @@ using ManagementHotel.Helpers;
 using ManagementHotel.Models;
 using ManagementHotel.Services;
 using ManagementHotel.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/taikhoans : lấy tất cả tài khoản
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet]
         public async Task<IActionResult> GetAllTaiKhoan()
         {
@@ -33,6 +35,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Post : api/taikhoans : thêm tài khoản mới 
+        [Authorize(Policy = "AdminActive")]
         [HttpPost]
         public async Task<IActionResult> AddTaiKhoan([FromBody]CreateTaiKhoanRequestDto taiKhoanRequestDto)
         {
@@ -47,7 +50,8 @@ namespace ManagementHotel.Controllers
             return CreatedAtAction(nameof(GetTaiKhoanById), new { maTaiKhoan = taiKhoanNew.MaTaiKhoan }, taiKhoanNew);
         }
 
-        // Get : api/taikhoans/{maTaiKhoan} : lấy tài khoản qua mã tài khoản 
+        // Get : api/taikhoans/{maTaiKhoan} : lấy tài khoản qua mã tài khoản
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet("{maTaiKhoan}")]
         public async Task<IActionResult> GetTaiKhoanById(int maTaiKhoan)
         {
@@ -65,6 +69,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Delete : api/taikhoans/{maTaiKhoan} : Xóa tài khoản
+        [Authorize(Policy = "AdminActive")]
         [HttpDelete("{maTaiKhoan}")]
         public async Task<IActionResult> DeleteTaiKhoan(int maTaiKhoan)
         {

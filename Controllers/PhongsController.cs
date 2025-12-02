@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ManagementHotel.DTOs.Phong;
+﻿using ManagementHotel.DTOs.Phong;
 using ManagementHotel.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ManagementHotel.Controllers
 {
@@ -26,6 +27,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/phongs/{maPhong} : Lấy phòng theo mã phòng
+        [Authorize(Policy = "ActiveUser")]
         [HttpGet("{maPhong}")]
         public async Task<IActionResult> GetPhongById(int maPhong)
         {
@@ -42,6 +44,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Post : api/phongs : Thêm phòng mới
+        [Authorize(Policy = "AdminActive")]
         [HttpPost]
         public async Task<IActionResult> AddPhong([FromBody] CreatePhongRequestDto phong)
         {
@@ -57,6 +60,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Put : api/phongs/{maPhong} : Cập nhật phòng
+        [Authorize(Policy = "ActiveUser")]
         [HttpPut("{maPhong}")]
         public async Task<IActionResult> UpdatePhong(int maPhong, [FromBody] UpdatePhongRequestDto phong)
         {
@@ -72,6 +76,7 @@ namespace ManagementHotel.Controllers
         }
 
         // Delete : api/phongs/{maPhong} : Xóa phòng
+        [Authorize(Policy = "AdminActive")]
         [HttpDelete("{maPhong}")]
         public async Task<IActionResult> DeletePhong(int maPhong)
         {
