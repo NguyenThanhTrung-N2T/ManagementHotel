@@ -8,5 +8,8 @@ namespace ManagementHotel.Services.IServices
 
         // lấy chi tiết đặt phòng theo mã đặt phòng
         Task<DatPhongResponseDto?> GetDatPhongByIdAsync(int maDatPhong);
+
+        // tạo đặt phòng mới 
+        Task<DatPhongResponseDto> CreateDatPhongAsync(CreateDatPhongRequestDto createDatPhongRequestDto);
     }
 }

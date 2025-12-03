@@ -140,6 +140,7 @@ builder.Services.AddScoped<INhanVienRepository, NhanVienRepository>();
 builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
 builder.Services.AddScoped<IDichVuRepository, DichVuRepository>();
 builder.Services.AddScoped<IDatPhongRepository, DatPhongRepository>();
+builder.Services.AddScoped<IHoaDonRepository, HoaDonRepository>();
 builder.Services.AddScoped<ILoaiPhongService, LoaiPhongService>();
 builder.Services.AddScoped<IPhongService, PhongService>();
 builder.Services.AddScoped<IKhachHangService, KhachHangService>();
@@ -173,6 +174,15 @@ catch (Exception ex)
 {
     logger.LogError(ex, "Khong the ket noi database!");
 }
+
+// ✅ Cập nhật trạng thái phòng ngay khi app chạy
+using (var updateScope = app.Services.CreateScope())
+{
+    var updateContext = updateScope.ServiceProvider.GetRequiredService<ManagementHotelContext>();
+    updateContext.Database.ExecuteSqlRaw("EXEC CapNhatTrangThaiPhong");
+}
+
+
 
 // Cấu hình pipeline HTTP
 if (app.Environment.IsDevelopment())

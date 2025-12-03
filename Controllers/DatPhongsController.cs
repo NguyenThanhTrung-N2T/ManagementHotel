@@ -42,5 +42,24 @@ namespace ManagementHotel.Controllers
             // Trả về kết quả
             return Ok(datPhong);
         }
+
+        // Post : api/datphongs : tạo đặt phòng mới
+        [Authorize(Policy = "ActiveUser")]
+        [HttpPost]
+        public async Task<IActionResult> CreateDatPhong([FromBody] ManagementHotel.DTOs.DatPhong.CreateDatPhongRequestDto createDatPhongRequestDto)
+        {
+            try
+            {
+                // Tạo đặt phòng mới
+                var createdDatPhong = await _datPhongService.CreateDatPhongAsync(createDatPhongRequestDto);
+                // Trả về kết quả
+                return CreatedAtAction(nameof(GetDatPhongById), new { maDatPhong = createdDatPhong.MaDatPhong }, createdDatPhong);
+            }
+            catch (Exception ex)
+            {
+                // Trả về lỗi
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
     }
 }

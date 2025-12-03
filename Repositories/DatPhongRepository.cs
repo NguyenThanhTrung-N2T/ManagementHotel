@@ -1,6 +1,8 @@
 ﻿using ManagementHotel.Data;
 using ManagementHotel.DTOs.DatPhong;
+using ManagementHotel.Models;
 using ManagementHotel.Repositories.IRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace ManagementHotel.Repositories
 {
@@ -54,11 +56,45 @@ namespace ManagementHotel.Repositories
                         NgayLap = dp.HoaDon.NgayLap,
                         TongTien = dp.HoaDon.TongTien,
                         TrangThaiThanhToan = dp.HoaDon.TrangThaiThanhToan,
-                        NhanVienLap = dp.HoaDon.NhanVien.HoTen,
                     } : null
                 })
                 .FirstOrDefault();
             return datPhong;
+        }
+
+        // tạo đặt phòng mới
+        public async Task<DatPhongResponseDto> CreateDatPhongAsync(CreateDatPhongRequestDto createDatPhongRequestDto)
+        {
+            var datPhongEntity = new Models.DatPhong
+            {
+                MaKhachHang = createDatPhongRequestDto.MaKhachHang,
+                MaPhong = createDatPhongRequestDto.MaPhong,
+                NgayNhanPhong = createDatPhongRequestDto.NgayNhanPhong,
+                NgayTraPhong = createDatPhongRequestDto.NgayTraPhong,
+                TrangThai = createDatPhongRequestDto.TrangThai,
+                GhiChu = createDatPhongRequestDto.GhiChu
+            };
+            _context.datPhongs.Add(datPhongEntity);
+            await _context.SaveChangesAsync();
+            // Trả về thông tin đặt phòng vừa tạo
+            var createdDatPhong = await GetDatPhongByIdAsync(datPhongEntity.MaDatPhong);
+            return createdDatPhong!;
+        }
+
+        // kiểm tra đặt phòng còn trống hay không trong thời gian đặt 
+        public async Task<bool> IsPhongAvailableAsync(int maPhong, DateTime ngayNhanPhong, DateTime ngayTraPhong)
+        {
+            // kiểm tra trong cơ sở dữ liệu có đặt phòng nào trùng với phòng và thời gian không
+            var overlappingBooking = _context.datPhongs.Any(dp =>
+                dp.MaPhong == maPhong &&
+                dp.TrangThai != "Đã hủy" && // bỏ qua các đặt phòng đã hủy
+                (
+                    (ngayNhanPhong >= dp.NgayNhanPhong && ngayNhanPhong < dp.NgayTraPhong) || // ngày nhận phòng trùng
+                    (ngayTraPhong > dp.NgayNhanPhong && ngayTraPhong <= dp.NgayTraPhong) ||   // ngày trả phòng trùng
+                    (ngayNhanPhong <= dp.NgayNhanPhong && ngayTraPhong >= dp.NgayTraPhong)    // bao phủ toàn bộ khoảng thời gian
+                )
+            );
+            return !overlappingBooking;
         }
     }
 }
