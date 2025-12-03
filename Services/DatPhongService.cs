@@ -1,7 +1,7 @@
-﻿using ManagementHotel.Repositories.IRepositories;
+﻿using ManagementHotel.DTOs.DatPhong;
+using ManagementHotel.Models;
+using ManagementHotel.Repositories.IRepositories;
 using ManagementHotel.Services.IServices;
-
-using ManagementHotel.DTOs.DatPhong;
 using System.Reflection.Metadata.Ecma335;
 namespace ManagementHotel.Services
 {
@@ -87,6 +87,51 @@ namespace ManagementHotel.Services
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi tạo đặt phòng: " + ex.Message);
+            }
+        }
+
+        // cập nhật trạng thái đặt phòng
+        public async Task<DatPhongResponseDto?> UpdateDatPhongStatusAsync(int maDatPhong, string trangThai)
+        {
+            try
+            {
+                // Lấy thông tin đặt phòng
+                var datPhong = await _datPhongRepository.GetDatPhongByIdAsync(maDatPhong);
+                if (datPhong == null)
+                {
+                    throw new Exception($"Đặt phòng với mã {maDatPhong} không tồn tại.");
+                }
+
+                if(trangThai == "Đã hủy")
+                {
+                    if(datPhong.HoaDon != null)
+                    {
+                        // tính lại tiền phòng nếu hủy trước hạn đặt phòng
+                        if(DateTime.Now != datPhong.NgayTraPhong)
+                        {
+                            datPhong.HoaDon.TongTien = await _hoaDonRepository.TinhTongTien(datPhong.MaDatPhong, DateTime.Now);
+                            var hoaDonNew = await _hoaDonRepository.UpdateTongTienInHoaDon(datPhong.HoaDon.TongTien, datPhong.HoaDon.MaHoaDon);
+                        }
+                    }
+                }
+
+                // Nếu chuyển sang trạng thái "Đang ở" thì tạo hóa đơn (nếu chưa có)
+                if (trangThai == "Đang ở")
+                {
+                    if (datPhong.HoaDon == null)
+                    {
+                        await _hoaDonRepository.CreateHoaDonAsync(datPhong.MaDatPhong);
+                    }
+                }
+
+                // Cập nhật trạng thái đặt phòng
+                var updatedDatPhong = await _datPhongRepository.UpdateDatPhongStatusAsync(maDatPhong, trangThai);
+
+                return updatedDatPhong;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi thay đổi trạng thái đặt phòng: " + ex.Message, ex);
             }
         }
     }

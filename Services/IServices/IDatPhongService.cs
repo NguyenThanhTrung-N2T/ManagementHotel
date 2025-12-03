@@ -11,5 +11,9 @@ namespace ManagementHotel.Services.IServices
 
         // tạo đặt phòng mới 
         Task<DatPhongResponseDto> CreateDatPhongAsync(CreateDatPhongRequestDto createDatPhongRequestDto);
+
+        // cập nhật trạng thái đặt phòng
+        Task<DatPhongResponseDto?> UpdateDatPhongStatusAsync(int maDatPhong, string trangThai);
+
     }
 }

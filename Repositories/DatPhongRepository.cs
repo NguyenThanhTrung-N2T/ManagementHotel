@@ -96,5 +96,29 @@ namespace ManagementHotel.Repositories
             );
             return !overlappingBooking;
         }
+
+        // cập nhật trạng thái đặt phòng
+        public async Task<DatPhongResponseDto?> UpdateDatPhongStatusAsync(int maDatPhong, string trangThai)
+        {
+            var datPhong = await _context.datPhongs.FindAsync(maDatPhong);
+            if (datPhong == null)
+            {
+                throw new Exception("Đặt phòng với mã " + maDatPhong + " không tồn tại.");
+            }
+            datPhong.TrangThai = trangThai;
+            if (trangThai == "Đã hủy")
+            {
+                // nếu trạng thái là đã hủy, cập nhật trạng thái phòng về "Trống"
+                var phong = await _context.phongs.FindAsync(datPhong.MaPhong);
+                if (phong != null)
+                {
+                    phong.TrangThai = "Trống";
+                    _context.phongs.Update(phong);
+                }
+            }
+            _context.datPhongs.Update(datPhong);
+            await _context.SaveChangesAsync();
+            return await GetDatPhongByIdAsync(maDatPhong);
+        }
     }
 }

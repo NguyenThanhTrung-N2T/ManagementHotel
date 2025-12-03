@@ -15,5 +15,9 @@ namespace ManagementHotel.Repositories.IRepositories
 
         // kiểm tra phòng còn trống trong thời gian đặt hay không
         Task<bool> IsPhongAvailableAsync(int maPhong, DateTime ngayNhanPhong, DateTime ngayTraPhong);
+
+        // cập nhật trạng thái đặt phòng
+        Task<DatPhongResponseDto?> UpdateDatPhongStatusAsync(int maDatPhong, string trangThai);
+
     }
 }

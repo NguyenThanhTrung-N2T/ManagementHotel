@@ -145,8 +145,9 @@ CREATE TABLE BaoCaoDoanhThu (
 -- =====================================================
 -- 3. TRIGGERS
 -- =====================================================
-DROP TRIGGER IF EXISTS trg_CapNhatTienPhongKhiTaoHoaDon;
+DROP TRIGGER IF EXISTS trg_CapNhatBaoCaoDoanhThu;
 GO
+
 CREATE OR ALTER TRIGGER trg_CapNhatTongTienHoaDon
 ON ChiTietHoaDon
 AFTER INSERT, UPDATE, DELETE
@@ -177,32 +178,6 @@ BEGIN
     );
 END;
 GO
-CREATE OR ALTER TRIGGER trg_CapNhatTienPhongKhiSuaDatPhong
-ON DatPhong
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE hd
-    SET TongTien =
-        ISNULL((
-            SELECT SUM(ct.SoLuong * ct.DonGia)
-            FROM ChiTietHoaDon ct
-            WHERE ct.MaHoaDon = hd.MaHoaDon
-        ), 0)
-        +
-        ISNULL((
-            SELECT DATEDIFF(DAY, i.NgayNhanPhong, i.NgayTraPhong) * lp.GiaTheoDem
-            FROM inserted i
-            JOIN Phong p ON i.MaPhong = p.MaPhong
-            JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
-            WHERE i.MaDatPhong = hd.MaDatPhong
-        ), 0)
-    FROM HoaDon hd
-    WHERE hd.MaDatPhong IN (SELECT MaDatPhong FROM inserted);
-END;
-GO
 
 -- 🔹 Tổng tiền hóa đơn
 DROP TRIGGER IF EXISTS dbo.trg_CapNhatTongTienHoaDon;
@@ -228,37 +203,13 @@ BEGIN
 END;
 GO
 
--- 🔹 Cập nhật doanh thu khi thanh toán
-CREATE TRIGGER trg_CapNhatBaoCaoDoanhThu
-ON HoaDon
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
 
-    DECLARE @ngay DATE, @tien INT;
-
-    SELECT @ngay = i.NgayLap, @tien = i.TongTien
-    FROM inserted i
-    JOIN deleted d ON i.MaHoaDon = d.MaHoaDon
-    WHERE i.TrangThaiThanhToan = N'Đã thanh toán' AND d.TrangThaiThanhToan <> N'Đã thanh toán';
-
-    IF @ngay IS NOT NULL
-    BEGIN
-        IF EXISTS (SELECT 1 FROM BaoCaoDoanhThu WHERE Ngay = @ngay)
-            UPDATE BaoCaoDoanhThu
-            SET TongDoanhThu = TongDoanhThu + @tien
-            WHERE Ngay = @ngay;
-        ELSE
-            INSERT INTO BaoCaoDoanhThu (Ngay, Thang, Nam, TongDoanhThu)
-            VALUES (@ngay, MONTH(@ngay), YEAR(@ngay), @tien);
-    END
-END;
-GO
 
 -- =====================================================
 -- 5. Procedure đồng bộ trạng thái phòng theo ngày
 -- =====================================================
+IF OBJECT_ID('CapNhatTrangThaiPhong', 'P') IS NOT NULL
+    DROP PROCEDURE CapNhatTrangThaiPhong;
 CREATE OR ALTER PROCEDURE CapNhatTrangThaiPhong
 AS
 BEGIN
@@ -266,10 +217,29 @@ BEGIN
 
     DECLARE @NgayHienTai DATE = CAST(GETDATE() AS DATE);
 
-    -- 1️⃣ Các phòng đang có đặt phòng bị hủy → để nguyên trạng thái
-    -- Không cần update gì
+    -- Phòng có đặt phòng bị hủy → Trống
+    UPDATE p
+    SET TrangThai = N'Trống'
+    FROM Phong p
+    JOIN DatPhong dp ON p.MaPhong = dp.MaPhong
+    WHERE dp.TrangThai = N'Đã hủy';
 
-    -- 2️⃣ Các phòng trong khoảng ngày đặt phòng và trạng thái Đã đặt → Phòng hiển thị 'Đã đặt'
+    -- Phòng đã hết hạn trả phòng → Trống
+    UPDATE p
+    SET TrangThai = N'Trống'
+    FROM Phong p
+    JOIN DatPhong dp ON p.MaPhong = dp.MaPhong
+    WHERE @NgayHienTai >= dp.NgayTraPhong;
+
+    -- Phòng có đặt phòng nhưng chưa tới ngày nhận → Đã đặt
+    UPDATE p
+    SET TrangThai = N'Đã đặt'
+    FROM Phong p
+    JOIN DatPhong dp ON p.MaPhong = dp.MaPhong
+    WHERE dp.TrangThai = N'Đã đặt'
+      AND @NgayHienTai < dp.NgayNhanPhong;
+
+    -- Phòng trong khoảng ngày nhận đến ngày trả và trạng thái Đã đặt → Đã đặt
     UPDATE p
     SET TrangThai = N'Đã đặt'
     FROM Phong p
@@ -278,7 +248,7 @@ BEGIN
       AND @NgayHienTai >= dp.NgayNhanPhong
       AND @NgayHienTai < dp.NgayTraPhong;
 
-    -- 3️⃣ Các phòng trong khoảng ngày nhận phòng và trạng thái Đang ở → Phòng hiển thị 'Đang ở'
+    -- Phòng trong khoảng ngày nhận đến ngày trả và trạng thái Đang ở → Đang ở
     UPDATE p
     SET TrangThai = N'Đang ở'
     FROM Phong p
@@ -286,6 +256,17 @@ BEGIN
     WHERE dp.TrangThai = N'Đang ở'
       AND @NgayHienTai >= dp.NgayNhanPhong
       AND @NgayHienTai < dp.NgayTraPhong;
+
+    -- Phòng không có đặt phòng nào → Trống
+    UPDATE p
+    SET TrangThai = N'Trống'
+    FROM Phong p
+    WHERE NOT EXISTS (
+        SELECT 1 FROM DatPhong dp
+        WHERE dp.MaPhong = p.MaPhong
+          AND dp.TrangThai <> N'Đã hủy'
+          AND @NgayHienTai < dp.NgayTraPhong
+    );
 END;
 GO
 
@@ -354,8 +335,18 @@ GO
 
 select * from DatPhong;
 select * from HoaDon;
-delete from HoaDon where MaHoaDon = 8;
-delete from DatPhong where MaDatPhong = 16;
+select *from TaiKhoan;
+delete from Phong;
+delete from DatPhong;
+delete from HoaDon;
+delete from ChiTietHoaDon
+DBCC CHECKIDENT ('Phong', RESEED, 0);
+DBCC CHECKIDENT ('DatPhong', RESEED, 0);
+DBCC CHECKIDENT ('HoaDon', RESEED, 0);
+DBCC CHECKIDENT ('ChiTietHoaDon', RESEED, 0);
+
+delete from HoaDon where MaHoaDon = 6;
+delete from DatPhong where MaDatPhong = 7;
 
 SELECT hd.MaHoaDon,
        DATEDIFF(DAY, dp.NgayNhanPhong, dp.NgayTraPhong) * lp.GiaTheoDem AS TienPhong,
@@ -368,3 +359,4 @@ JOIN Phong p ON dp.MaPhong = p.MaPhong
 JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
 LEFT JOIN ChiTietHoaDon ct ON hd.MaHoaDon = ct.MaHoaDon
 GROUP BY hd.MaHoaDon, dp.NgayNhanPhong, dp.NgayTraPhong, lp.GiaTheoDem;
+

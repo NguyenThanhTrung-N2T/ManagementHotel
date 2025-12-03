@@ -19,6 +19,7 @@ namespace ManagementHotel.Repositories
         // Lấy tất cả phòng
         public async Task<IEnumerable<PhongResponseDto>> GetAllPhongAsync()
         {
+            await _context.Database.ExecuteSqlRawAsync("EXEC CapNhatTrangThaiPhong");
             // Lấy tất cả phòng từ cơ sở dữ liệu
             var phongs = await _context.phongs.ToListAsync();
             // chuyển sang dto và trả về cho client

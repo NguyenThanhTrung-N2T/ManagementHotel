@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ManagementHotel.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
+using ManagementHotel.DTOs.DatPhong;
 
 namespace ManagementHotel.Controllers
 {
@@ -54,6 +55,26 @@ namespace ManagementHotel.Controllers
                 var createdDatPhong = await _datPhongService.CreateDatPhongAsync(createDatPhongRequestDto);
                 // Trả về kết quả
                 return CreatedAtAction(nameof(GetDatPhongById), new { maDatPhong = createdDatPhong.MaDatPhong }, createdDatPhong);
+            }
+            catch (Exception ex)
+            {
+                // Trả về lỗi
+                return BadRequest(new { Message = ex.Message });
+            }
+
+        }
+
+        // Put: api/datphongs/{maDatPhong} : Cập nhật đặt phòng theo mã đặt phòng
+        [Authorize(Policy = "ActiveUser")]
+        [HttpPut("{maDatPhong}")]
+        public async Task<IActionResult> UpdateDatPhongStatus(int maDatPhong,UpdateDatPhongRequestDto updateDto)
+        {
+            try
+            {
+                // Cập nhật trạng thái đặt phòng
+                var updatedDatPhong = await _datPhongService.UpdateDatPhongStatusAsync(maDatPhong, updateDto.TrangThai);
+                // Trả về kết quả
+                return Ok(updatedDatPhong);
             }
             catch (Exception ex)
             {
