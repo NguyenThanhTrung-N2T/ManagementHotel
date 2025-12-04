@@ -34,7 +34,21 @@ namespace ManagementHotel.Services
                 {
                     throw new Exception("Tên đăng nhập đã tồn tại !");
                 }
-                
+
+                // kiểm tra nhân viên đã có tài khoản chưa
+                var isNhanVienHasTaiKhoan = await _taiKhoanRepository.IsNhanVienHasTaiKhoan(taiKhoanNew.MaNhanVien);
+                if (isNhanVienHasTaiKhoan)
+                {
+                    throw new Exception("Nhân viên đã có tài khoản !");
+                }
+
+                // kiểm tra vai trò của tài khoản có khớp với chức vụ nhân viên không
+                var isVaiTroValid = await _taiKhoanRepository.IsVaiTroValidForNhanVien(taiKhoanNew.VaiTro, taiKhoanNew.MaNhanVien);
+                if (!isVaiTroValid)
+                {
+                    throw new Exception("Vai trò của tài khoản không khớp với chức vụ nhân viên !");
+                }
+
                 // thêm tài khoản 
                 return await _taiKhoanRepository.AddTaiKhoanAsync(taiKhoanNew);
             }

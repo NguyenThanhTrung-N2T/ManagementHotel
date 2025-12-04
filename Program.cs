@@ -103,21 +103,21 @@ builder.Services.AddAuthorization(options =>
     // Policy cho Admin ACTIVE
     options.AddPolicy("AdminActive", policy =>
     {
-        policy.RequireRole("Admin");                     // role = Admin
+        policy.RequireRole("Quản lý");                     // role = Admin
         policy.RequireClaim("Status", "Hoạt động");      // status = Hoạt động
     });
 
     // Policy cho Nhân viên ACTIVE
     options.AddPolicy("StaffActive", policy =>
     {
-        policy.RequireRole("Nhân viên");
+        policy.RequireRole("Nhân viên","Lễ tân");
         policy.RequireClaim("Status", "Hoạt động");      // status = Hoạt động
     });
 
     // Policy chung Admin + Nhân viên ACTIVE
     options.AddPolicy("ActiveUser", policy =>
     {
-        policy.RequireRole("Admin", "Nhân viên");
+        policy.RequireRole("Admin", "Nhân viên", "Lễ tân");
         policy.RequireClaim("Status", "Hoạt động");
     });
 });

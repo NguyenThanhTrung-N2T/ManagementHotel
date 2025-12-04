@@ -170,5 +170,28 @@ namespace ManagementHotel.Repositories
             }
             return false;
         }
+
+        //kiểm tra nhân viên có tài khoản chưa
+        public async Task<bool> IsNhanVienHasTaiKhoan(int maNhanVien)
+        {
+            return await _context.taiKhoans.AnyAsync(tk => tk.MaNhanVien == maNhanVien);
+        }
+
+        // kiểm tra vai trò tài khoản có khớp với chức vụ nhân viên hay không
+        public async Task<bool> IsVaiTroValidForNhanVien(string? vaiTro, int maNhanVien)
+        {
+            // lấy nhân viên từ db
+            var nhanVien = await _context.nhanViens.FindAsync(maNhanVien);
+            if (nhanVien == null)
+            {
+                return false;
+            }
+            // kiểm tra vai trò với chức vụ
+            if (vaiTro == nhanVien.ChucVu)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -30,7 +30,13 @@ namespace ManagementHotel.Repositories.IRepositories
         // kiểm tài khoản theo tên đăng nhập
         Task<bool> IsExistTaiKhoan(string? tenDangNhap);
 
+        // kiểm tra nhân viên đã có tài khoản chưa
+        Task<bool> IsNhanVienHasTaiKhoan(int maNhanVien);
+
         // đăng nhập 
         Task<bool> LoginTaiKhoanAsync(LoginTaiKhoanRequestDto requestDto);
+
+        // kiểm tra vai trò có khớp với chức vụ của nhân viên không
+        Task<bool> IsVaiTroValidForNhanVien(string? vaiTro, int maNhanVien);
     }
 }
