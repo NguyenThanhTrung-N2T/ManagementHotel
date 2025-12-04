@@ -6,6 +6,7 @@ namespace ManagementHotel.DTOs.KhachHang
     {
         public int MaKhachHang { get; set; }
         public string? HoTen { get; set; }
+        public string? TrangThai { get; set; }
         public string? CCCD { get; set; }
         public string? SoDienThoai { get; set; }
         public string? Email { get; set; }

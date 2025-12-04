@@ -11,6 +11,8 @@ namespace ManagementHotel.DTOs.KhachHang
         [Required(ErrorMessage = "Số điện thoại không được để trống !")]
         [MaxLength(15, ErrorMessage = "Số điện thoại không được vượt quá 15 ký tự !")]
         public string? SoDienThoai { get; set; }
+        public string? TrangThai { get; set; }
+
         [EmailAddress(ErrorMessage = "Email không hợp lệ !")]
         public string? Email { get; set; }
         public string? DiaChi { get; set; }

@@ -212,5 +212,12 @@ namespace ManagementHotel.Repositories
             // Kiểm tra sự tồn tại của tên loại phòng trong cơ sở dữ liệu
             return await _context.loaiPhongs.AnyAsync(lp => lp.TenLoaiPhong == tenLoaiPhong);
         }
+
+        // kiểm tra loại phòng có đang được sử dụng không
+        public async Task<bool> IsLoaiPhongInUseAsync(int maLoaiPhong)
+        {
+            // Kiểm tra có phòng nào thuộc loại này đang được sử dụng không
+            return await _context.phongs.AnyAsync(p => p.MaLoaiPhong == maLoaiPhong && p.TrangThai != "Trống");
+        }
     }
 }

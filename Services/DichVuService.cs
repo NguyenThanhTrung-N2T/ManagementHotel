@@ -31,6 +31,12 @@ namespace ManagementHotel.Services
         {
             try
             {
+                // kiem tra ten dich vu da ton tai chua
+                var existingDichVu = await _dichVuRepository.IsDichVuNameExistsAsync(requestDto.TenDichVu);
+                if (existingDichVu)
+                {
+                    throw new Exception("Tên dịch vụ đã tồn tại.");
+                }
                 // them dich vu moi vao db
                 return await _dichVuRepository.AddDichVuAsync(requestDto);
             }
@@ -47,9 +53,14 @@ namespace ManagementHotel.Services
             {
                 // Lấy thông tin hiện tại
                 var existingDichVu = await _dichVuRepository.GetDichVuByIdAsync(maDichVu);
-                if (existingDichVu == null)
+                if(existingDichVu!= null && existingDichVu.TenDichVu != requestDto.TenDichVu)
                 {
-                    throw new Exception("Dịch vụ không tồn tại.");
+                    // Kiểm tra tên dịch vụ đã tồn tại hay chưa
+                    var isNameExists = await _dichVuRepository.IsDichVuNameExistsAsync(requestDto.TenDichVu);
+                    if (isNameExists)
+                    {
+                        throw new Exception("Tên dịch vụ đã tồn tại.");
+                    }
                 }
                 // Cập nhật thông tin dich vu
                 return await _dichVuRepository.UpdateDichVuAsync(maDichVu, requestDto);

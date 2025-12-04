@@ -21,5 +21,8 @@ namespace ManagementHotel.Repositories.IRepositories
 
         // lọc dịch vụ theo tên , đơn giá , đơn vị 
         Task<IEnumerable<DichVuResponseDto>> FilterDichVuAsync(FilterDichVuRequestDto filterDto);
+
+        // kiểm tra dịch vụ tồn tại theo tên dịch vụ 
+        Task<bool> IsDichVuNameExistsAsync(string? tenDichVu);
     }
 }

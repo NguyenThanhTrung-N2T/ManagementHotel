@@ -9,6 +9,7 @@ namespace ManagementHotel.DTOs.DichVu
 
         [MaxLength(10)]
         public string? DonVi {  get; set; }
+        public string? TrangThai { get; set; }
 
         [Range(0,int.MaxValue)]
         public int? DonGia { get; set; }

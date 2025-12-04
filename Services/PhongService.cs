@@ -6,9 +6,11 @@ namespace ManagementHotel.Services
     public class PhongService : IPhongService
     {
         private readonly IPhongRepository _phongRepository;
-        public PhongService(IPhongRepository phongRepository)
+        private readonly ILoaiPhongRepository _loaiPhongRepository;
+        public PhongService(IPhongRepository phongRepository, ILoaiPhongRepository loaiPhongRepository)
         {
             _phongRepository = phongRepository;
+            _loaiPhongRepository = loaiPhongRepository;
         }
 
         // Lấy tất cả phòng
@@ -35,6 +37,13 @@ namespace ManagementHotel.Services
                 {
                     throw new Exception("Số phòng đã tồn tại.");
                 }
+                // kiểm tra loại phòng có hoạt động hay không
+                var loaiPhong = await _loaiPhongRepository.GetLoaiPhongByIdAsync(phong.MaLoaiPhong);
+                if(loaiPhong == null || loaiPhong.TrangThai != "Hoạt động")
+                {
+                    throw new Exception("Loại phòng không tồn tại hoặc không hoạt động.");
+                }
+
                 // Thêm phòng mới
                 return await _phongRepository.AddPhongAsync(phong);
             }

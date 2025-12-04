@@ -22,10 +22,12 @@ namespace ManagementHotel.Repositories
         {
             var dichvu = await _context.dichVus.ToListAsync();
 
-            return dichvu.Select(x => new DichVuResponseDto {
+            return dichvu.Select(x => new DichVuResponseDto
+            {
                 TenDichVu = x.TenDichVu,
                 MaDichVu = x.MaDichVu,
                 DonGia = x.DonGia,
+                TrangThai = x.TrangThai,
                 DonVi = x.DonVi,
             });
         }
@@ -36,7 +38,7 @@ namespace ManagementHotel.Repositories
             // lấy dịch vuj trong db
             var dichvu = await _context.dichVus.FindAsync(maDichVu);
             // neu ko co
-            if(dichvu == null)
+            if (dichvu == null)
             {
                 return null;
             }
@@ -45,6 +47,7 @@ namespace ManagementHotel.Repositories
             {
                 MaDichVu = dichvu.MaDichVu,
                 DonGia = dichvu.DonGia,
+                TrangThai = dichvu.TrangThai,
                 DonVi = dichvu.DonVi,
                 TenDichVu = dichvu.TenDichVu
             };
@@ -60,6 +63,7 @@ namespace ManagementHotel.Repositories
                 {
                     TenDichVu = requestDto.TenDichVu,
                     DonGia = requestDto.DonGia,
+                    TrangThai = requestDto.TrangThai,
                     DonVi = requestDto.DonVi,
                 };
                 // them vao db
@@ -71,6 +75,7 @@ namespace ManagementHotel.Repositories
                     MaDichVu = dichVuNew.MaDichVu,
                     TenDichVu = dichVuNew.TenDichVu,
                     DonGia = dichVuNew.DonGia,
+                    TrangThai = dichVuNew.TrangThai,
                     DonVi = dichVuNew.DonVi,
                 };
             }
@@ -94,6 +99,7 @@ namespace ManagementHotel.Repositories
                 // Cập nhật thông tin dịch vụ
                 dichvu.TenDichVu = updateDto.TenDichVu;
                 dichvu.DonVi = updateDto.DonVi;
+                dichvu.TrangThai = updateDto.TrangThai;
                 dichvu.DonGia = updateDto.DonGia;
                 // Lưu thay đổi vào cơ sở dữ liệu
                 await _context.SaveChangesAsync();
@@ -102,8 +108,9 @@ namespace ManagementHotel.Repositories
                 {
                     MaDichVu = dichvu.MaDichVu,
                     TenDichVu = dichvu.TenDichVu,
+                    TrangThai = dichvu.TrangThai,
                     DonGia = dichvu.DonGia,
-                    DonVi= dichvu.DonVi,
+                    DonVi = dichvu.DonVi,
                 };
             }
             catch (Exception ex)
@@ -154,6 +161,12 @@ namespace ManagementHotel.Repositories
             {
                 dichVus = dichVus.Where(dv => dv.DonGia < filterDto.DonGia);
             }
+
+            // lọc theo trạng thái
+            if (!string.IsNullOrEmpty(filterDto.TrangThai))
+            {
+                dichVus = dichVus.Where(dv => dv.TrangThai!.Contains(filterDto.TrangThai));
+            }
             // lấy danh sách dịch vụ 
             var result = await dichVus.ToListAsync();
             // tra ve dto cho client
@@ -162,8 +175,15 @@ namespace ManagementHotel.Repositories
                 MaDichVu = dv.MaDichVu,
                 TenDichVu = dv.TenDichVu,
                 DonVi = dv.DonVi,
+                TrangThai = dv.TrangThai,
                 DonGia = dv.DonGia,
             });
+        }
+
+        // kiểm tra dịch vụ tồn tại theo tên dịch vụ
+        public async Task<bool> IsDichVuNameExistsAsync(string? tenDichVu)
+        {
+            return await _context.dichVus.AnyAsync(dv => dv.TenDichVu == tenDichVu);
         }
     }
 }

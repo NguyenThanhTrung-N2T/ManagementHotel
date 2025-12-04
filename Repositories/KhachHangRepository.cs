@@ -25,6 +25,7 @@ namespace ManagementHotel.Repositories
                 MaKhachHang = kh.MaKhachHang,
                 HoTen = kh.HoTen,
                 CCCD = kh.CCCD,
+                TrangThai = kh.TrangThai,
                 SoDienThoai = kh.SoDienThoai,
                 Email = kh.Email,
                 DiaChi = kh.DiaChi
@@ -48,6 +49,7 @@ namespace ManagementHotel.Repositories
                 MaKhachHang = khachHang.MaKhachHang,
                 HoTen = khachHang.HoTen,
                 CCCD = khachHang.CCCD,
+                TrangThai = khachHang.TrangThai,
                 SoDienThoai = khachHang.SoDienThoai,
                 Email = khachHang.Email,
                 DiaChi = khachHang.DiaChi
@@ -64,6 +66,7 @@ namespace ManagementHotel.Repositories
                 {
                     HoTen = khachHangNew.HoTen,
                     CCCD = khachHangNew.CCCD,
+                    TrangThai = khachHangNew.TrangThai,
                     SoDienThoai = khachHangNew.SoDienThoai,
                     Email = khachHangNew.Email,
                     DiaChi = khachHangNew.DiaChi
@@ -77,6 +80,7 @@ namespace ManagementHotel.Repositories
                     MaKhachHang = khachHang.MaKhachHang,
                     HoTen = khachHang.HoTen,
                     CCCD = khachHang.CCCD,
+                    TrangThai = khachHang.TrangThai,
                     SoDienThoai = khachHang.SoDienThoai,
                     Email = khachHang.Email,
                     DiaChi = khachHang.DiaChi
@@ -109,6 +113,7 @@ namespace ManagementHotel.Repositories
                 // Cập nhật thông tin khách hàng
                 khachHang.HoTen = khachHangUpdate.HoTen;
                 khachHang.SoDienThoai = khachHangUpdate.SoDienThoai;
+                khachHang.TrangThai = khachHangUpdate.TrangThai;
                 khachHang.Email = khachHangUpdate.Email;
                 khachHang.DiaChi = khachHangUpdate.DiaChi;
                 // Lưu thay đổi vào cơ sở dữ liệu
@@ -119,6 +124,7 @@ namespace ManagementHotel.Repositories
                     MaKhachHang = khachHang.MaKhachHang,
                     HoTen = khachHang.HoTen,
                     CCCD = khachHang.CCCD,
+                    TrangThai = khachHang.TrangThai,
                     SoDienThoai = khachHang.SoDienThoai,
                     Email = khachHang.Email,
                     DiaChi = khachHang.DiaChi
@@ -172,6 +178,11 @@ namespace ManagementHotel.Repositories
             {
                 query = query.Where(kh => kh.SoDienThoai!.Contains(filter.SoDienThoai));
             }
+            // lọc theo trang thai 
+            if (!string.IsNullOrEmpty(filter.TrangThai))
+            {
+                query = query.Where(kh => kh.TrangThai!.Contains(filter.TrangThai));
+            }
             // Thực hiện truy vấn và lấy kết quả
             var khachHangs = await query.ToListAsync();
             // Chuyển sang DTO và trả về cho client
@@ -180,6 +191,7 @@ namespace ManagementHotel.Repositories
                 MaKhachHang = kh.MaKhachHang,
                 HoTen = kh.HoTen,
                 CCCD = kh.CCCD,
+                TrangThai = kh.TrangThai,
                 SoDienThoai = kh.SoDienThoai,
                 Email = kh.Email,
                 DiaChi = kh.DiaChi

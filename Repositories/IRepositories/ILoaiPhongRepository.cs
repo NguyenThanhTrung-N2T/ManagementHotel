@@ -26,5 +26,8 @@ namespace ManagementHotel.Repositories.IRepositories
 
         // Kiểm tra tồn tại tên loại phòng
         Task<bool> IsLoaiPhongNameExistsAsync(string? tenLoaiPhong);
+
+        // kiểm tra loại phòng có đang được sử dụng không
+        Task<bool> IsLoaiPhongInUseAsync(int maLoaiPhong);
     }
 }

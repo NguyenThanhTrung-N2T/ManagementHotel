@@ -10,9 +10,10 @@ namespace ManagementHotel.DTOs.KhachHang
         [Required(ErrorMessage = "Số điện thoại không được để trống !")]
         [MaxLength(15, ErrorMessage = "Số điện thoại không được vượt quá 15 ký tự !")]
         public string? SoDienThoai { get; set; }
-        
+        [Required(ErrorMessage = "Trạng thái không được để trống !")]
+        public string? TrangThai { get; set; }
         [Required(ErrorMessage = "CCCD không được để trống !")]
-        [MaxLength(20, ErrorMessage = "CCCD không được vượt quá 20 ký tự !")]
+        [MaxLength(12, ErrorMessage = "CCCD không được vượt quá 12 ký tự !")]
         public string? CCCD { get; set; }
 
         [EmailAddress(ErrorMessage = "Email không hợp lệ !")]

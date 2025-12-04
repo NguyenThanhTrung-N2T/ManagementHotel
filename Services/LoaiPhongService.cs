@@ -64,6 +64,16 @@ namespace ManagementHotel.Services
                         throw new Exception("Tên loại phòng đã tồn tại.");
                     }
                 }
+                if(loaiPhong.TrangThai == "Ngưng hoạt động")
+                {
+                    // Kiểm tra có phòng nào thuộc loại này đang được sử dụng không
+                    var isUsed = await _loaiPhongRepository.IsLoaiPhongInUseAsync(maLoaiPhong);
+                    if (isUsed)
+                    {
+                        throw new Exception("Không thể đặt loại phòng thành 'Không hoạt động' vì có phòng đang được sử dụng.");
+                    }
+                }
+
                 // Cập nhật loại phòng
                 return await _loaiPhongRepository.UpdateLoaiPhongAsync(maLoaiPhong, loaiPhong);
             }
