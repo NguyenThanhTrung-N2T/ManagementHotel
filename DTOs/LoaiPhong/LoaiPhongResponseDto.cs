@@ -5,6 +5,7 @@
         public int MaLoaiPhong { get; set; }
         public string? TenLoaiPhong { get; set; }
         public string? MoTa { get; set; }
+        public string? TrangThai { get; set; }
         public int GiaTheoDem { get; set; }
     }
 }

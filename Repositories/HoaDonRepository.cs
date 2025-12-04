@@ -1,4 +1,5 @@
 ﻿using ManagementHotel.Data;
+using ManagementHotel.DTOs.ChiTietHoaDon;
 using ManagementHotel.DTOs.HoaDon;
 using ManagementHotel.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
@@ -93,5 +94,67 @@ namespace ManagementHotel.Repositories
             };
         }
 
+        // lọc hóa đơn theo trạng thái thanh toán
+        public async Task<IEnumerable<HoaDonResponseDto>> FilterHoaDonByStatusAsync(string trangThai)
+        {
+            var hoaDons = await _context.hoaDons
+                .Where(hd => hd.TrangThaiThanhToan == trangThai)
+                .Select(hd => new HoaDonResponseDto
+                {
+                    MaHoaDon = hd.MaHoaDon,
+                    NgayLap = hd.NgayLap,
+                    TongTien = hd.TongTien,
+                    TrangThaiThanhToan = hd.TrangThaiThanhToan
+                })
+                .ToListAsync();
+            return hoaDons;
+        }
+
+        // lấy danh sách hóa đơn
+        public async Task<IEnumerable<HoaDonResponseDto>> GetAllHoaDonsAsync()
+        {
+            var hoaDons = await _context.hoaDons
+                .Select(hd => new HoaDonResponseDto
+                {
+                    MaHoaDon = hd.MaHoaDon,
+                    NgayLap = hd.NgayLap,
+                    TongTien = hd.TongTien,
+                    TrangThaiThanhToan = hd.TrangThaiThanhToan
+                })
+                .ToListAsync();
+            return hoaDons;
+        }
+
+        // lấy chi tiết hóa đơn theo mã hóa đơn
+        public async Task<HoaDonDetailResponseDto?> GetHoaDonDetailByIdAsync(int maHoaDon)
+        {
+            var hoaDon = await _context.hoaDons
+                .Include(hd => hd.DatPhong)
+                .ThenInclude(dp => dp!.Phong)
+                .Include(hd => hd.ChiTietHoaDons)
+                .ThenInclude(ct => ct.DichVu)
+                .FirstOrDefaultAsync(hd => hd.MaHoaDon == maHoaDon);
+
+            if (hoaDon == null) return null;
+
+            return new HoaDonDetailResponseDto
+            {
+                MaHoaDon = hoaDon.MaHoaDon,
+                MaDatPhong = hoaDon.MaDatPhong,
+                NgayLap = hoaDon.NgayLap,
+                TrangThaiThanhToan = hoaDon.TrangThaiThanhToan,
+                TenKhachHang = hoaDon.DatPhong?.KhachHang.HoTen,
+                SoPhong = hoaDon.DatPhong?.Phong?.SoPhong,
+                ChiTietHoaDons = hoaDon.ChiTietHoaDons.Select(ct => new ChiTietHoaDonResponseDto
+                {
+                    MaChiTietHD = ct.MaChiTietHD,
+                    MaDichVu = ct.MaDichVu,
+                    TenDichVu = ct.DichVu?.TenDichVu,
+                    SoLuong = ct.SoLuong,
+                    DonGia = ct.DonGia,
+                    Mota = ct.Mota
+                }).ToList()
+            };
+        }
     }
 }

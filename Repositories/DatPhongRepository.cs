@@ -120,5 +120,24 @@ namespace ManagementHotel.Repositories
             await _context.SaveChangesAsync();
             return await GetDatPhongByIdAsync(maDatPhong);
         }
+
+        // lọc đặt phòng theo trạng thái 
+        public async Task<IEnumerable<DatPhongListResponseDto>> FilterDatPhongByStatusAsync(string trangThai)
+        {
+            var datPhongs = _context.datPhongs
+                .Where(dp => dp.TrangThai == trangThai)
+                .Select(dp => new DatPhongListResponseDto
+                {
+                    MaDatPhong = dp.MaDatPhong,
+                    TenKhachHang = dp.KhachHang.HoTen,
+                    SoDienThoai = dp.KhachHang.SoDienThoai,
+                    TenPhong = dp.Phong.SoPhong,
+                    LoaiPhong = dp.Phong.LoaiPhong.TenLoaiPhong,
+                    NgayNhanPhong = dp.NgayNhanPhong,
+                    NgayTraPhong = dp.NgayTraPhong,
+                    TrangThai = dp.TrangThai
+                });
+            return datPhongs;
+        }
     }
 }

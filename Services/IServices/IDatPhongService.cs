@@ -15,5 +15,8 @@ namespace ManagementHotel.Services.IServices
         // cập nhật trạng thái đặt phòng
         Task<DatPhongResponseDto?> UpdateDatPhongStatusAsync(int maDatPhong, string trangThai);
 
+        // lọc đặt phòng theo trạng thái
+        Task<IEnumerable<DatPhongListResponseDto>> FilterDatPhongByStatusAsync(string trangThai);
+
     }
 }

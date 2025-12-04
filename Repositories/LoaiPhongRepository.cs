@@ -5,6 +5,7 @@ using ManagementHotel.Models;
 using ManagementHotel.Repositories.IRepositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Console;
 namespace ManagementHotel.Repositories
 {
     public class LoaiPhongRepository : ILoaiPhongRepository
@@ -28,6 +29,7 @@ namespace ManagementHotel.Repositories
                 MaLoaiPhong = lp.MaLoaiPhong,
                 TenLoaiPhong = lp.TenLoaiPhong,
                 MoTa = lp.MoTa,
+                TrangThai = lp.TrangThai,
                 GiaTheoDem = lp.GiaTheoDem
             });
         }
@@ -42,6 +44,7 @@ namespace ManagementHotel.Repositories
                 {
                     TenLoaiPhong = loaiPhongNew.TenLoaiPhong,
                     MoTa = loaiPhongNew.MoTa,
+                    TrangThai = loaiPhongNew.TrangThai,
                     GiaTheoDem = loaiPhongNew.GiaTheoDem
                 };
                 // Thêm vào cơ sở dữ liệu
@@ -53,6 +56,7 @@ namespace ManagementHotel.Repositories
                     MaLoaiPhong = loaiPhong.MaLoaiPhong,
                     TenLoaiPhong = loaiPhong.TenLoaiPhong,
                     MoTa = loaiPhong.MoTa,
+                    TrangThai = loaiPhong.TrangThai,
                     GiaTheoDem = loaiPhong.GiaTheoDem
                 };
             }
@@ -76,6 +80,7 @@ namespace ManagementHotel.Repositories
                     MaLoaiPhong = loaiPhong.MaLoaiPhong,
                     TenLoaiPhong = loaiPhong.TenLoaiPhong,
                     MoTa = loaiPhong.MoTa,
+                    TrangThai = loaiPhong.TrangThai,
                     GiaTheoDem = loaiPhong.GiaTheoDem
                 };
             }
@@ -97,6 +102,7 @@ namespace ManagementHotel.Repositories
                 // Cập nhật thông tin
                 loaiPhong.TenLoaiPhong = loaiPhongUpdate.TenLoaiPhong;
                 loaiPhong.MoTa = loaiPhongUpdate.MoTa;
+                loaiPhong.TrangThai = loaiPhongUpdate.TrangThai;
                 loaiPhong.GiaTheoDem = loaiPhongUpdate.GiaTheoDem;
                 // Lưu thay đổi vào cơ sở dữ liệu
                 await _context.SaveChangesAsync();
@@ -106,6 +112,7 @@ namespace ManagementHotel.Repositories
                     MaLoaiPhong = loaiPhong.MaLoaiPhong,
                     TenLoaiPhong = loaiPhong.TenLoaiPhong,
                     MoTa = loaiPhong.MoTa,
+                    TrangThai = loaiPhong.TrangThai,
                     GiaTheoDem = loaiPhong.GiaTheoDem
                 };
             }
@@ -161,6 +168,11 @@ namespace ManagementHotel.Repositories
             {
                 query = query.Where(lp => lp.TenLoaiPhong!.Contains(filter.TenLoaiPhong));
             }
+            // lọc theo trạng thái phòng nếu có
+            if (!string.IsNullOrEmpty(filter.TrangThaiPhong))
+            {
+                query = query.Where(lp => lp.TrangThai!.Contains(filter.TrangThaiPhong));
+            }
             // Sắp xếp kết quả nếu có
             if (!string.IsNullOrEmpty(filter.SapXepTheo))
             {
@@ -189,6 +201,7 @@ namespace ManagementHotel.Repositories
                 MaLoaiPhong = lp.MaLoaiPhong,
                 TenLoaiPhong = lp.TenLoaiPhong,
                 MoTa = lp.MoTa,
+                TrangThai = lp.TrangThai,
                 GiaTheoDem = lp.GiaTheoDem
             });
         }

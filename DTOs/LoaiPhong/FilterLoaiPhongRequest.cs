@@ -9,6 +9,7 @@ namespace ManagementHotel.DTOs.LoaiPhong
         [Range(0, int.MaxValue, ErrorMessage = "Giá phải là số nguyên không âm.")]
         public int? GiaMax { get; set; } = null;
         public string? TenLoaiPhong { get; set; }
+        public string? TrangThaiPhong { get; set; }
         public string? SapXepTheo { get; set; }
         public string? ThuTu { get; set; } = "ASC";
     }

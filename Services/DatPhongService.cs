@@ -134,5 +134,11 @@ namespace ManagementHotel.Services
                 throw new Exception("Lỗi khi thay đổi trạng thái đặt phòng: " + ex.Message, ex);
             }
         }
+
+        // lọc đặt phòng theo trạng thái
+        public async Task<IEnumerable<DatPhongListResponseDto>> FilterDatPhongByStatusAsync(string trangThai)
+        {
+            return await _datPhongRepository.FilterDatPhongByStatusAsync(trangThai);
+        }
     }
 }

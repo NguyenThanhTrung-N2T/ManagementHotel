@@ -82,5 +82,17 @@ namespace ManagementHotel.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
+
+        // Get: api/datphongs/filter/?trangThai= : Lọc đặt phòng theo trạng thái
+        [Authorize(Policy ="ActiveUser")]
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterDatPhongByStatus([FromQuery] string trangThai)
+        {
+            // Lọc đặt phòng theo trạng thái
+            var filteredDatPhongs = await _datPhongService.FilterDatPhongByStatusAsync(trangThai);
+            // Trả về kết quả
+            return Ok(filteredDatPhongs);
+        }
+
     }
 }

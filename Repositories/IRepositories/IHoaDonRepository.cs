@@ -12,5 +12,14 @@ namespace ManagementHotel.Repositories.IRepositories
 
         // cập nhật tổng tiền mới vào hóa đơn
         Task<HoaDonResponseDto> UpdateTongTienInHoaDon(int tongTien, int maHoaDon);
+
+        // lọc hóa đơn theo trạng thái thanh toán
+        Task<IEnumerable<HoaDonResponseDto>> FilterHoaDonByStatusAsync(string trangThai);
+
+        // lấy danh sách hóa đơn
+        Task<IEnumerable<HoaDonResponseDto>> GetAllHoaDonsAsync();
+
+        // lấy chi tiết hóa đơn theo mã hóa đơn
+        Task<HoaDonDetailResponseDto?> GetHoaDonDetailByIdAsync(int maHoaDon);
     }
 }
