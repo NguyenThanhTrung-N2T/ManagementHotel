@@ -296,6 +296,9 @@ VALUES
 
 select * from DatPhong;
 select * from HoaDon;
+select * from HoaDon,ChiTietHoaDon  
+where HoaDon.MaHoaDon = ChiTietHoaDon.MaHoaDon and HoaDon.MaHoaDon = 5
+
 select *from TaiKhoan;
 delete from Phong;
 delete from DatPhong;

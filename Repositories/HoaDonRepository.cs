@@ -130,11 +130,16 @@ namespace ManagementHotel.Repositories
         {
             var hoaDon = await _context.hoaDons
                 .Include(hd => hd.DatPhong)
-                .ThenInclude(dp => dp!.Phong)
+                    .ThenInclude(dp => dp!.Phong)
+                .Include(hd => hd.DatPhong)
+                    .ThenInclude(dp => dp!.KhachHang)
                 .Include(hd => hd.ChiTietHoaDons)
-                .ThenInclude(ct => ct.DichVu)
+                    .ThenInclude(ct => ct.DichVu)
                 .FirstOrDefaultAsync(hd => hd.MaHoaDon == maHoaDon);
+            
 
+            // code test phan tinh tong tien 
+            //hoaDon.TongTien = await TinhTongTien(hoaDon.MaDatPhong, hoaDon.DatPhong.NgayTraPhong);
             if (hoaDon == null) return null;
 
             return new HoaDonDetailResponseDto
@@ -143,13 +148,14 @@ namespace ManagementHotel.Repositories
                 MaDatPhong = hoaDon.MaDatPhong,
                 NgayLap = hoaDon.NgayLap,
                 TrangThaiThanhToan = hoaDon.TrangThaiThanhToan,
-                TenKhachHang = hoaDon.DatPhong?.KhachHang.HoTen,
+                TenKhachHang = hoaDon.DatPhong?.KhachHang?.HoTen,   // thêm ? để tránh null
                 SoPhong = hoaDon.DatPhong?.Phong?.SoPhong,
+                TongTien = hoaDon.TongTien,
                 ChiTietHoaDons = hoaDon.ChiTietHoaDons.Select(ct => new ChiTietHoaDonResponseDto
                 {
                     MaChiTietHD = ct.MaChiTietHD,
                     MaDichVu = ct.MaDichVu,
-                    TenDichVu = ct.DichVu?.TenDichVu,
+                    TenDichVu = ct.DichVu?.TenDichVu,   // thêm ? để tránh null
                     SoLuong = ct.SoLuong,
                     DonGia = ct.DonGia,
                     Mota = ct.Mota

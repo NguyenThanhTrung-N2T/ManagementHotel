@@ -30,5 +30,18 @@ namespace ManagementHotel.Controllers
             var hoaDons = await _hoaDonService.GetAllHoaDonsAsync();
             return Ok(hoaDons);
         }
+
+        // Get : api/hoadons/{maHoaDon} : Lấy thông tin hóa đơn theo mã hóa đơn
+        [Authorize(Policy = "ActiveUser")]
+        [HttpGet("{maHoaDon}")]
+        public async Task<IActionResult> GetHoaDonDetailById(int maHoaDon)
+        {
+            var hoaDon = await _hoaDonService.GetHoaDonDetailByIdAsync(maHoaDon);
+            if (hoaDon == null)
+            {
+                return NotFound();
+            }
+            return Ok(hoaDon);
+        }
     }
 }

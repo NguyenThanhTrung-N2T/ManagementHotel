@@ -21,5 +21,11 @@ namespace ManagementHotel.Services
         {
             return await _hoaDonRepository.GetAllHoaDonsAsync();
         }
+
+        // lấy hóa đơn theo mã hóa đơn
+        public async Task<HoaDonDetailResponseDto?> GetHoaDonDetailByIdAsync(int maHoaDon)
+        {
+            return await _hoaDonRepository.GetHoaDonDetailByIdAsync(maHoaDon);
+        }
     }
 }

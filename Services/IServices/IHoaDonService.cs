@@ -8,5 +8,8 @@ namespace ManagementHotel.Services.IServices
 
         // lấy danh sách hóa đơn
         Task<IEnumerable<HoaDonResponseDto>> GetAllHoaDonsAsync();
+
+        // lấy hóa đơn theo mã hóa đơn
+        Task<HoaDonDetailResponseDto?> GetHoaDonDetailByIdAsync(int maHoaDon);
     }
 }

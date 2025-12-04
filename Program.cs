@@ -117,7 +117,7 @@ builder.Services.AddAuthorization(options =>
     // Policy chung Admin + Nhân viên ACTIVE
     options.AddPolicy("ActiveUser", policy =>
     {
-        policy.RequireRole("Admin", "Nhân viên", "Lễ tân");
+        policy.RequireRole("Quản lý", "Nhân viên", "Lễ tân");
         policy.RequireClaim("Status", "Hoạt động");
     });
 });

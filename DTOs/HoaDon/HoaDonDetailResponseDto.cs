@@ -8,6 +8,7 @@ namespace ManagementHotel.DTOs.HoaDon
         public int MaDatPhong { get; set; }
         public DateTime NgayLap { get; set; }
         public string? TrangThaiThanhToan { get; set; }
+        public int TongTien { get; set; }
 
         // Thông tin đặt phòng (nếu muốn hiển thị kèm)
         public string? TenKhachHang { get; set; }
