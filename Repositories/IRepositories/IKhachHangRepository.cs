@@ -23,5 +23,8 @@ namespace ManagementHotel.Repositories.IRepositories
 
         // Lọc khách hàng theo tên hoặc CCCD , số điện thoại
         Task<IEnumerable<KhachHangResponseDto>> FilterKhachHangAsync(FilterKhachHangRequestDto filter);
+
+        // kiểm tra khách hàng có đặt phòng hay không 
+        Task<bool> IsKhachHangHasDatPhongAsync(int maKhachHang);
     }
 }

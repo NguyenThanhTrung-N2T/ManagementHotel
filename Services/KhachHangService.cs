@@ -75,6 +75,21 @@ namespace ManagementHotel.Services
                 {
                     throw new Exception("Khách hàng không tồn tại.");
                 }
+                // kiểm tra khách hàng có đặt phòng hay không
+                var hasActiveBookings = await _khachHangRepository.IsKhachHangHasDatPhongAsync(maKhachHang);
+                if (hasActiveBookings)
+                {
+                    await UpdateKhachHangAsync(maKhachHang, new UpdateKhachHangRequest
+                    {
+                        HoTen = existingKhachHang.HoTen,
+                        SoDienThoai = existingKhachHang.SoDienThoai,
+                        Email = existingKhachHang.Email,
+                        DiaChi = existingKhachHang.DiaChi,
+                        TrangThai = "Ngưng hoạt động"
+                    });
+                    throw new Exception("Khách hàng có đặt phòng, không thể xóa. Khách hàng đã được đặt trạng thái 'Ngưng hoạt động'.");
+                }
+
                 // Xóa khách hàng
                 return await _khachHangRepository.DeleteKhachHangAsync(maKhachHang);
             }

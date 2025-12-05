@@ -25,6 +25,13 @@ namespace ManagementHotel.Repositories
 
             if (datPhong == null) throw new Exception("Không tìm thấy đặt phòng");
 
+            // kiểm tra khách hàng có hoạt động không
+            var khachhang = await _context.khachHangs.FindAsync(datPhong.MaKhachHang);
+            if (khachhang == null || khachhang.TrangThai != "Hoạt động")
+            {
+                throw new Exception("Khách hàng không tồn tại hoặc không hoạt động.");
+            }
+
             var hoaDon = new Models.HoaDon
             {
                 MaDatPhong = maDatPhong,

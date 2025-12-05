@@ -10,6 +10,8 @@ namespace ManagementHotel.DTOs.DichVu
         [MaxLength(10)]
         public string? DonVi {  get; set; }
         public string? TrangThai { get; set; }
+        public string? SapXepTheoGia { get; set; } // "asc" hoặc "desc"
+        public string? SapXepTheoTen { get; set; } // "asc" hoặc "desc"
 
         [Range(0,int.MaxValue)]
         public int? DonGia { get; set; }

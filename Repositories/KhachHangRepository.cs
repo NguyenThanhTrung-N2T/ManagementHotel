@@ -147,6 +147,7 @@ namespace ManagementHotel.Repositories
                 {
                     return false; // Khách hàng không tồn tại
                 }
+
                 // Xóa khách hàng khỏi cơ sở dữ liệu
                 _context.khachHangs.Remove(khachHang);
                 await _context.SaveChangesAsync();
@@ -196,6 +197,13 @@ namespace ManagementHotel.Repositories
                 Email = kh.Email,
                 DiaChi = kh.DiaChi
             });
+        }
+
+        // kiểm tra khách hàng có đặt phòng hay không
+        public async Task<bool> IsKhachHangHasDatPhongAsync(int maKhachHang)
+        {
+            // Kiểm tra sự tồn tại của đặt phòng với mã khách hàng đã cho
+            return await _context.datPhongs.AnyAsync(dp => dp.MaKhachHang == maKhachHang);
         }
     }
 }

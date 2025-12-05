@@ -167,6 +167,34 @@ namespace ManagementHotel.Repositories
             {
                 dichVus = dichVus.Where(dv => dv.TrangThai!.Contains(filterDto.TrangThai));
             }
+
+            // sắp xếp theo giá ( tăng / giảm dần)
+            if(!string.IsNullOrEmpty(filterDto.SapXepTheoGia))
+            {
+                if (filterDto.SapXepTheoGia == "asc")
+                {
+                    dichVus = dichVus.OrderBy(dv => dv.DonGia);
+                }
+                else if (filterDto.SapXepTheoGia == "desc")
+                {
+                    dichVus = dichVus.OrderByDescending(dv => dv.DonGia);
+                }
+            }
+
+            // sắp xếp theo tên ( tăng / giảm dần)
+            if (!string.IsNullOrEmpty(filterDto.SapXepTheoTen))
+            {
+                if (filterDto.SapXepTheoTen == "asc")
+                {
+                    dichVus = dichVus.OrderBy(dv => dv.TenDichVu);
+                }
+                else if (filterDto.SapXepTheoTen == "desc")
+                {
+                    dichVus = dichVus.OrderByDescending(dv => dv.TenDichVu);
+                }
+            }
+
+
             // lấy danh sách dịch vụ 
             var result = await dichVus.ToListAsync();
             // tra ve dto cho client

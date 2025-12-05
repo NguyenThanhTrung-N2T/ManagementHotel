@@ -49,6 +49,10 @@ namespace ManagementHotel.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDatPhong([FromBody] ManagementHotel.DTOs.DatPhong.CreateDatPhongRequestDto createDatPhongRequestDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 // Tạo đặt phòng mới
@@ -69,6 +73,10 @@ namespace ManagementHotel.Controllers
         [HttpPut("{maDatPhong}")]
         public async Task<IActionResult> UpdateDatPhongStatus(int maDatPhong,UpdateDatPhongRequestDto updateDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 // Cập nhật trạng thái đặt phòng

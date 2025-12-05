@@ -42,6 +42,11 @@ namespace ManagementHotel.Services
                 {
                     throw new Exception("Khách hàng với mã " + createDatPhongRequestDto.MaKhachHang + " không tồn tại.");
                 }
+                // kiểm tra khách hàng có trạng thái hoạt động
+                if (khachHang.TrangThai != "Hoạt động")
+                {
+                    throw new Exception("Khách hàng với mã " + createDatPhongRequestDto.MaKhachHang + " không có trạng thái hoạt động.");
+                }
                 // kiểm tra phòng tồn tại và trạng thái phòng
                 var phong = await _phongRepository.GetPhongByIdAsync(createDatPhongRequestDto.MaPhong);
                 if(phong == null)
