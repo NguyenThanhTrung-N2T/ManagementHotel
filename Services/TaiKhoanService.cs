@@ -52,7 +52,7 @@ namespace ManagementHotel.Services
                 // thêm tài khoản 
                 return await _taiKhoanRepository.AddTaiKhoanAsync(taiKhoanNew);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 throw new Exception("Lỗi khi thêm tài khoản mới !", ex);
             }
@@ -114,6 +114,21 @@ namespace ManagementHotel.Services
                 return true;
             }
             return false;
+        }
+
+        // reset mật khẩu tài khoản
+        public async Task<bool> ResetMatKhauTaiKhoanAsync(ResetPasswordRequestDto requestDto)
+        {
+
+            // kiểm tra tồn tại tài khoản
+            var existingTaiKhoan = await _taiKhoanRepository.IsExistTaiKhoan(requestDto.TenDangNhap);
+            if (!existingTaiKhoan)
+            {
+                throw new Exception("Tài khoản không tồn tại.");
+            }
+            var updateResult = await _taiKhoanRepository.ResetPasswordAsync(requestDto);
+            return updateResult;
+
         }
     }
 }

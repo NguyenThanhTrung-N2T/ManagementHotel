@@ -38,5 +38,9 @@ namespace ManagementHotel.Repositories.IRepositories
 
         // kiểm tra vai trò có khớp với chức vụ của nhân viên không
         Task<bool> IsVaiTroValidForNhanVien(string? vaiTro, int maNhanVien);
+
+        // reset mật khẩu mới
+        Task<bool> ResetPasswordAsync(ResetPasswordRequestDto request);
+
     }
 }

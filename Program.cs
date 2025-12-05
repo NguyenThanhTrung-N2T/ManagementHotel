@@ -142,6 +142,7 @@ builder.Services.AddScoped<IDichVuRepository, DichVuRepository>();
 builder.Services.AddScoped<IDatPhongRepository, DatPhongRepository>();
 builder.Services.AddScoped<IHoaDonRepository, HoaDonRepository>();
 builder.Services.AddScoped<IChiTietHoaDonRepository, ChiTietHoaDonRepository>();
+builder.Services.AddScoped<IBaoCaoDoanhThuRepository, BaoCaoDoanhThuRepository>();
 builder.Services.AddScoped<ILoaiPhongService, LoaiPhongService>();
 builder.Services.AddScoped<IPhongService, PhongService>();
 builder.Services.AddScoped<IKhachHangService, KhachHangService>();
@@ -151,6 +152,7 @@ builder.Services.AddScoped<IDichVuService, DichVuService>();
 builder.Services.AddScoped<IDatPhongService, DatPhongService>();
 builder.Services.AddScoped<IHoaDonService, HoaDonService>();
 builder.Services.AddScoped<IChiTietHoaDonService, ChiTietHoaDonService>();
+builder.Services.AddScoped<IBaoCaoDoanhThuService, BaoCaoDoanhThuService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

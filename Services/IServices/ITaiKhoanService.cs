@@ -21,5 +21,8 @@ namespace ManagementHotel.Services.IServices
 
         // đăng nhập tài khoản 
         Task<bool> LoginTaiKhoanAsync(LoginTaiKhoanRequestDto loginTaiKhoanRequestDto);
+
+        // reset mật khẩu tài khoản
+        Task<bool> ResetMatKhauTaiKhoanAsync(ResetPasswordRequestDto requestDto);
     }
 }

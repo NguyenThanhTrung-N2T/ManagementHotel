@@ -37,7 +37,7 @@ namespace ManagementHotel.Controllers
         // Post : api/taikhoans : thêm tài khoản mới 
         [Authorize(Policy = "AdminActive")]
         [HttpPost]
-        public async Task<IActionResult> AddTaiKhoan([FromBody]CreateTaiKhoanRequestDto taiKhoanRequestDto)
+        public async Task<IActionResult> AddTaiKhoan([FromBody] CreateTaiKhoanRequestDto taiKhoanRequestDto)
         {
             // kiểm tra dữ liệu đầu vào
             if (!ModelState.IsValid)
@@ -59,7 +59,7 @@ namespace ManagementHotel.Controllers
             var taikhoan = await _taiKhoanService.GetTaiKhoanByIdAsync(maTaiKhoan);
 
             // kiểm tra kết quả
-            if(taikhoan == null)
+            if (taikhoan == null)
             {
                 return NotFound(); // trả về 404
             }
@@ -90,7 +90,8 @@ namespace ManagementHotel.Controllers
         {
             // kiểm tra tài khoản 
             var result = await _taiKhoanService.LoginTaiKhoanAsync(loginTaiKhoanRequestDto);
-            if (!result) {
+            if (!result)
+            {
                 return NotFound("Mật khẩu tài khoản sai.");
             }
             var taiKhoan = await _taiKhoanService.GetTaiKhoanByTenDangNhapAsync(loginTaiKhoanRequestDto.TenDangNhap!);
@@ -119,6 +120,23 @@ namespace ManagementHotel.Controllers
                 role = taiKhoan.VaiTro
             });
 
+        }
+
+        // Post : api/taikhoans/reset-password : đặt lại mật khẩu
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDto resetPasswordRequestDto)
+        {
+            try
+            {
+                // đặt lại mật khẩu
+                var result = await _taiKhoanService.ResetMatKhauTaiKhoanAsync(resetPasswordRequestDto);
+                // trả về client
+                return Ok(new { message = "Đặt lại mật khẩu thành công." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using ManagementHotel.DTOs.Phong;
 using ManagementHotel.DTOs.TaiKhoan;
 using ManagementHotel.Models;
 using ManagementHotel.Repositories.IRepositories;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace ManagementHotel.Repositories
@@ -192,6 +193,22 @@ namespace ManagementHotel.Repositories
                 return true;
             }
             return false;
+        }
+
+        // reset mật khẩu tài khoản
+        public async Task<bool> ResetPasswordAsync(ResetPasswordRequestDto request)
+        {
+            // lấy tài khoản từ db
+            var taiKhoan = await _context.taiKhoans.FirstOrDefaultAsync(tk => tk.TenDangNhap == request.TenDangNhap);
+            if (taiKhoan == null)
+            {
+                return false;
+            }
+            string newPaswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword, workFactor: 19);
+            taiKhoan.MatKhau = newPaswordHash;
+            _context.taiKhoans.Update(taiKhoan);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
