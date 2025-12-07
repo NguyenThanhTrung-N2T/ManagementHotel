@@ -33,6 +33,7 @@ namespace ManagementHotel.Controllers
 
         // Get : api/baocaodoanhthus/nam={nam} && thang={thang}: lấy báo cáo doanh thu theo tháng và năm
         [Authorize(Policy = "ActiveUser")]
+        [HttpGet("baocaotheothang-nam")]
         public async Task<IActionResult> GetBaoCaoDoanhThuByMonthYear([FromQuery] int nam, [FromQuery] int thang)
         {
             try

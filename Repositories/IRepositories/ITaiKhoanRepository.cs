@@ -42,5 +42,8 @@ namespace ManagementHotel.Repositories.IRepositories
         // reset mật khẩu mới
         Task<bool> ResetPasswordAsync(ResetPasswordRequestDto request);
 
+        // cap nhat trang thai tai khoan
+        Task<bool> UpdateTrangThaiTaiKhoanAsync(int maTaiKhoan, UpdateTrangThaiTaiKhoanRequestDto trangThai);
+
     }
 }

@@ -130,5 +130,11 @@ namespace ManagementHotel.Services
             return updateResult;
 
         }
+
+        // khoa tai khoan nguoi dung 
+        public async Task<bool> UpdateTrangThaiTaiKhoanAsync(int maTaiKhoan, UpdateTrangThaiTaiKhoanRequestDto trangThai)
+        {
+            return await _taiKhoanRepository.UpdateTrangThaiTaiKhoanAsync(maTaiKhoan, trangThai);
+        }
     }
 }

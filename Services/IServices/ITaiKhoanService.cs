@@ -24,5 +24,8 @@ namespace ManagementHotel.Services.IServices
 
         // reset mật khẩu tài khoản
         Task<bool> ResetMatKhauTaiKhoanAsync(ResetPasswordRequestDto requestDto);
+
+        // cap nhat tai khoan nguoi dung 
+        Task<bool> UpdateTrangThaiTaiKhoanAsync(int maTaiKhoan, UpdateTrangThaiTaiKhoanRequestDto trangThai);
     }
 }

@@ -92,8 +92,8 @@ namespace ManagementHotel.Controllers
             var result = await _taiKhoanService.LoginTaiKhoanAsync(loginTaiKhoanRequestDto);
             if (!result)
             {
-                return NotFound("Mật khẩu tài khoản sai.");
-            }
+                return Unauthorized("Mật khẩu tài khoản sai.");
+            }   
             var taiKhoan = await _taiKhoanService.GetTaiKhoanByTenDangNhapAsync(loginTaiKhoanRequestDto.TenDangNhap!);
             if (taiKhoan == null)
             {
@@ -130,13 +130,30 @@ namespace ManagementHotel.Controllers
             {
                 // đặt lại mật khẩu
                 var result = await _taiKhoanService.ResetMatKhauTaiKhoanAsync(resetPasswordRequestDto);
-                // trả về client
+                if (!result)
+                {
+                    return NotFound("Không tìm thấy tài khoản để đặt lại mật khẩu.");
+                }
                 return Ok(new { message = "Đặt lại mật khẩu thành công." });
+
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        // Put : api/taikhoans/{maTaiKhoan} : cap nhat trang thai tai khoan
+        [Authorize(Policy = "AdminActive")]
+        [HttpPut("{maTaiKhoan}")]
+        public async Task<IActionResult> UpdateTaiKhoan(int maTaiKhoan, [FromBody] UpdateTrangThaiTaiKhoanRequestDto trangthai)
+        {
+            var updateTK = await _taiKhoanService.UpdateTrangThaiTaiKhoanAsync(maTaiKhoan,trangthai);
+            if (!updateTK)
+            {
+                return NotFound("Cập nhật trạng thái không thành công !");
+            }
+            return Ok(new { message = "Cập nhật tài khoản thành công !" }); 
         }
     }
 }

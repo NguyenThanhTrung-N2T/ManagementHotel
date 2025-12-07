@@ -210,5 +210,19 @@ namespace ManagementHotel.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        // cap nhat trang thai tai khoan
+        public async Task<bool> UpdateTrangThaiTaiKhoanAsync(int maTaiKhoan, UpdateTrangThaiTaiKhoanRequestDto dto)
+        {
+            var taikhoan = await _context.taiKhoans.FindAsync(maTaiKhoan);
+            if (taikhoan == null)
+            {
+                return false;
+            }
+            taikhoan.TrangThai = dto.TrangThai;
+            _context.taiKhoans.Update(taikhoan);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
