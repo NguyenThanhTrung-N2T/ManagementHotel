@@ -17,7 +17,7 @@ namespace ManagementHotel.DTOs.NhanVien
         public string? SoDienThoai { get; set; }
 
         [Required(ErrorMessage = "CCCD không được để trống !")]
-        [MaxLength(20, ErrorMessage = "CCCD không được vượt quá 20 ký tự !")]
+        [MaxLength(12, ErrorMessage = "CCCD không được vượt quá 12 ký tự !")]
         public string? CCCD { get; set; }
 
         [EmailAddress(ErrorMessage = "Email không hợp lệ !")]

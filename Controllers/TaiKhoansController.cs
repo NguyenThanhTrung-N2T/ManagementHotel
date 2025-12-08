@@ -89,15 +89,15 @@ namespace ManagementHotel.Controllers
         public async Task<IActionResult> LoginTaiKhoan([FromBody] LoginTaiKhoanRequestDto loginTaiKhoanRequestDto)
         {
             // kiểm tra tài khoản 
-            var result = await _taiKhoanService.LoginTaiKhoanAsync(loginTaiKhoanRequestDto);
-            if (!result)
-            {
-                return Unauthorized("Mật khẩu tài khoản sai.");
-            }   
             var taiKhoan = await _taiKhoanService.GetTaiKhoanByTenDangNhapAsync(loginTaiKhoanRequestDto.TenDangNhap!);
             if (taiKhoan == null)
             {
                 return NotFound("Tài khoản không tồn tại.");
+            }
+            var result = await _taiKhoanService.LoginTaiKhoanAsync(loginTaiKhoanRequestDto);
+            if (!result)
+            {
+                return Unauthorized("Mật khẩu tài khoản sai.");
             }
             // tạo token
             var token = _jwtTokenService.GenerateToken(maTaiKhoan: taiKhoan.MaTaiKhoan.ToString(),
