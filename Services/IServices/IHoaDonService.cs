@@ -11,5 +11,8 @@ namespace ManagementHotel.Services.IServices
 
         // lấy hóa đơn theo mã hóa đơn
         Task<HoaDonDetailResponseDto?> GetHoaDonDetailByIdAsync(int maHoaDon);
+
+        // Cập nhật trạng thái hóa đơn 
+        Task<HoaDonResponseDto?> UpdateHoaDonAsync(int maHoaDon,UpdateHoaDonRequestDto dto);
     }
 }

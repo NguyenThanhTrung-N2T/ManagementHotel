@@ -1,6 +1,7 @@
 ﻿using ManagementHotel.Data;
 using ManagementHotel.DTOs.ChiTietHoaDon;
 using ManagementHotel.DTOs.HoaDon;
+using ManagementHotel.Models;
 using ManagementHotel.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -169,5 +170,27 @@ namespace ManagementHotel.Repositories
                 }).ToList()
             };
         }
+
+        // cập nhật trạng thái hóa đơn 
+        public async Task<HoaDonResponseDto?> UpdateHoaDonAsync(int maHoaDon, string? trangThai)
+        {
+            var hoaodon = await _context.hoaDons.FindAsync(maHoaDon);
+            if (hoaodon == null)
+            {
+                return null;
+            }
+            hoaodon.TrangThaiThanhToan = trangThai;
+            _context.hoaDons.Update(hoaodon);
+            await _context.SaveChangesAsync();
+            return new HoaDonResponseDto
+            {
+                MaHoaDon = maHoaDon,
+                TongTien = hoaodon.TongTien,
+                NgayLap = hoaodon.NgayLap,
+                TrangThaiThanhToan = trangThai
+            };
+        }
+
+
     }
 }

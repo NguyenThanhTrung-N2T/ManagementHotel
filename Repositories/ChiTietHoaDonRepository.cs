@@ -37,7 +37,10 @@ namespace ManagementHotel.Repositories
                 DonGia = createDto.DonGia,
                 Mota = createDto.MoTa
             };
+            var tiendichvu = createDto.SoLuong * createDto.DonGia;
+            hoaDon.TongTien += tiendichvu;
             _context.chiTietHoaDons.Add(chiTietHoaDon);
+            _context.hoaDons.Update(hoaDon);
             await _context.SaveChangesAsync();
             // trả về chi tiết hóa đơn đã tạo
             return new ChiTietHoaDonResponseDto
@@ -59,7 +62,15 @@ namespace ManagementHotel.Repositories
             {
                 return false;
             }
+            var tiendichvu = chiTietHoaDon.SoLuong * chiTietHoaDon.DonGia;
+            var hoadon = await _context.hoaDons.FindAsync(chiTietHoaDon.MaHoaDon);
+            if (hoadon == null)
+            {
+                return false; 
+            }
+            hoadon.TongTien -= tiendichvu;
             _context.chiTietHoaDons.Remove(chiTietHoaDon);
+            _context.hoaDons.Update(hoadon);
             await _context.SaveChangesAsync();
             return true;
         }

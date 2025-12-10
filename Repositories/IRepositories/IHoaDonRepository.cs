@@ -21,5 +21,8 @@ namespace ManagementHotel.Repositories.IRepositories
 
         // lấy chi tiết hóa đơn theo mã hóa đơn
         Task<HoaDonDetailResponseDto?> GetHoaDonDetailByIdAsync(int maHoaDon);
+
+        // cập nhật trạng thái hóa đơn 
+        Task<HoaDonResponseDto?> UpdateHoaDonAsync(int maHoaDon, string? trangThai);
     }
 }

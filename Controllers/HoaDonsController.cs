@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ManagementHotel.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
+using ManagementHotel.DTOs.HoaDon;
 namespace ManagementHotel.Controllers
 {
     [Route("api/[controller]")]
@@ -37,6 +38,19 @@ namespace ManagementHotel.Controllers
         public async Task<IActionResult> GetHoaDonDetailById(int maHoaDon)
         {
             var hoaDon = await _hoaDonService.GetHoaDonDetailByIdAsync(maHoaDon);
+            if (hoaDon == null)
+            {
+                return NotFound();
+            }
+            return Ok(hoaDon);
+        }
+
+        // Put : api/hoadons/{maHoaDon}
+        [Authorize(Policy = "ActiveUser")]
+        [HttpPut("{maHoaDon}")]
+        public async Task<IActionResult> UpdateStatusHoaDonAsunc(int maHoaDon,UpdateHoaDonRequestDto dto)
+        {
+            var hoaDon = await _hoaDonService.UpdateHoaDonAsync(maHoaDon,dto);
             if (hoaDon == null)
             {
                 return NotFound();
