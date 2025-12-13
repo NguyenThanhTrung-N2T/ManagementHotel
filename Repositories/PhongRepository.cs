@@ -28,7 +28,8 @@ namespace ManagementHotel.Repositories
                 MaPhong = p.MaPhong,
                 SoPhong = p.SoPhong,
                 TrangThai = p.TrangThai,
-                GhiChu = p.GhiChu
+                GhiChu = p.GhiChu,
+                TenLoaiPhong = p.LoaiPhong.TenLoaiPhong
             });
         }
 
@@ -46,7 +47,8 @@ namespace ManagementHotel.Repositories
                     MaPhong = phong.MaPhong,
                     SoPhong = phong.SoPhong,
                     TrangThai = phong.TrangThai,
-                    GhiChu = phong.GhiChu
+                    GhiChu = phong.GhiChu,
+                    TenLoaiPhong = phong.LoaiPhong.TenLoaiPhong
                 };
             }
             return null!;
@@ -74,7 +76,8 @@ namespace ManagementHotel.Repositories
                     MaPhong = newPhong.MaPhong,
                     SoPhong = newPhong.SoPhong,
                     TrangThai = newPhong.TrangThai,
-                    GhiChu = newPhong.GhiChu
+                    GhiChu = newPhong.GhiChu,
+                    TenLoaiPhong = newPhong.LoaiPhong.TenLoaiPhong
                 };
             }
             catch (Exception ex)
@@ -107,6 +110,7 @@ namespace ManagementHotel.Repositories
                 existingPhong.MaLoaiPhong = phong.MaLoaiPhong;
                 existingPhong.TrangThai = phong.TrangThai;
                 existingPhong.GhiChu = phong.GhiChu;
+                existingPhong.MaLoaiPhong = phong.MaLoaiPhong;
                 // Lưu thay đổi vào cơ sở dữ liệu
                 _context.phongs.Update(existingPhong);
                 await _context.SaveChangesAsync();
@@ -116,7 +120,8 @@ namespace ManagementHotel.Repositories
                     MaPhong = existingPhong.MaPhong,
                     SoPhong = existingPhong.SoPhong,
                     TrangThai = existingPhong.TrangThai,
-                    GhiChu = existingPhong.GhiChu
+                    GhiChu = existingPhong.GhiChu,
+                    TenLoaiPhong = existingPhong.LoaiPhong.TenLoaiPhong
                 };
             }
             catch (Exception ex)
@@ -170,7 +175,8 @@ namespace ManagementHotel.Repositories
                 MaPhong = p.MaPhong,
                 SoPhong = p.SoPhong,
                 TrangThai = p.TrangThai,
-                GhiChu = p.GhiChu
+                GhiChu = p.GhiChu,
+                TenLoaiPhong = p.LoaiPhong.TenLoaiPhong
             });
         }
     }
