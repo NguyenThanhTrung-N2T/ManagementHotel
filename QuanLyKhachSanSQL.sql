@@ -248,49 +248,135 @@ VALUES
 
 
 -- Đặt phòng
-INSERT INTO DatPhong (MaKhachHang, MaPhong, NgayNhanPhong, NgayTraPhong, TrangThai, GhiChu)
+INSERT INTO DatPhong (MaKhachHang, MaPhong, NgayNhanPhong, NgayTraPhong, TrangThai)
 VALUES
-(1, 1, '2025-12-05', '2025-12-07', N'Đã đặt', N'Khách đặt trước 2 ngày'),
-(2, 2, '2025-12-06', '2025-12-08', N'Đã đặt', N'Khách VIP'),
-(3, 3, '2025-12-04', '2025-12-06', N'Đang ở', N'Đã nhận phòng'),
-(4, 4, '2025-12-01', '2025-12-03', N'Đã hủy', N'Hủy do bận việc'),
-(5, 5, '2025-12-10', '2025-12-12', N'Đã đặt', N'Đặt online'),
-(1, 6, '2025-12-02', '2025-12-04', N'Đang ở', N'Khách nước ngoài'),
-(2, 7, '2025-12-07', '2025-12-09', N'Đã đặt', N'Khách quen'),
-(3, 8, '2025-12-08', '2025-12-10', N'Đã đặt', N'Khách đoàn'),
-(4, 9, '2025-12-03', '2025-12-05', N'Đang ở', N'Khách công tác'),
-(5, 10, '2025-12-11', '2025-12-13', N'Đã đặt', N'Khách đặt qua điện thoại');
+-- Tháng 1
+(1, 1, '2025-01-05', '2025-01-07', N'Đang ở'),
+(2, 2, '2025-01-15', '2025-01-18', N'Đang ở'),
+
+-- Tháng 2
+(3, 3, '2025-02-10', '2025-02-12', N'Đang ở'),
+(4, 4, '2025-02-20', '2025-02-22', N'Đang ở'),
+
+-- Tháng 3
+(5, 5, '2025-03-05', '2025-03-09', N'Đang ở'),
+(1, 6, '2025-03-18', '2025-03-20', N'Đang ở'),
+
+-- Tháng 4
+(2, 7, '2025-04-02', '2025-04-05', N'Đang ở'),
+(3, 8, '2025-04-15', '2025-04-17', N'Đang ở'),
+
+-- Tháng 5
+(4, 9, '2025-05-01', '2025-05-04', N'Đang ở'),
+(5,10, '2025-05-20', '2025-05-23', N'Đang ở'),
+
+-- Tháng 6
+(1, 1, '2025-06-05', '2025-06-08', N'Đang ở'),
+(2, 2, '2025-06-18', '2025-06-20', N'Đang ở'),
+
+-- Tháng 7
+(3, 3, '2025-07-01', '2025-07-04', N'Đang ở'),
+(4, 4, '2025-07-15', '2025-07-18', N'Đang ở'),
+
+-- Tháng 8
+(5, 5, '2025-08-05', '2025-08-09', N'Đang ở'),
+(1, 6, '2025-08-20', '2025-08-22', N'Đang ở'),
+
+-- Tháng 9
+(2, 7, '2025-09-03', '2025-09-06', N'Đang ở'),
+(3, 8, '2025-09-18', '2025-09-21', N'Đang ở'),
+
+-- Tháng 10
+(4, 9, '2025-10-02', '2025-10-05', N'Đang ở'),
+(5,10, '2025-10-15', '2025-10-18', N'Đang ở'),
+
+-- Tháng 11
+(1, 1, '2025-11-05', '2025-11-07', N'Đang ở'),
+(2, 2, '2025-11-20', '2025-11-23', N'Đang ở'),
+
+-- Tháng 12
+(3, 3, '2025-12-01', '2025-12-04', N'Đang ở'),
+(4, 4, '2025-12-18', '2025-12-21', N'Đang ở');
+
 
 -- Hóa đơn (mỗi đặt phòng chỉ có 1 hóa đơn)
-INSERT INTO HoaDon (MaDatPhong, NgayLap, TrangThaiThanhToan)
+INSERT INTO HoaDon (MaDatPhong, NgayLap, TongTien, TrangThaiThanhToan)
 VALUES
-(1, GETDATE(), N'Chưa thanh toán'),
-(2, GETDATE(), N'Chưa thanh toán'),
-(3, GETDATE(), N'Đã thanh toán'),
-(5, GETDATE(), N'Chưa thanh toán'),
-(6, GETDATE(), N'Đã thanh toán'),
-(7, GETDATE(), N'Chưa thanh toán'),
-(9, GETDATE(), N'Đã thanh toán');
+-- Tháng 1
+(1, '2025-01-07', 1200000, N'Đã thanh toán'), -- 2 đêm * 500k + DV
+(2, '2025-01-18', 4200000, N'Đã thanh toán'),
+
+-- Tháng 2
+(3, '2025-02-12', 5300000, N'Đã thanh toán'),
+(4, '2025-02-22', 3900000, N'Chưa thanh toán'),
+
+-- Tháng 3
+(5, '2025-03-09', 8000000, N'Đã thanh toán'),
+(6, '2025-03-20', 2500000, N'Chưa thanh toán'),
+
+-- Tháng 4
+(7, '2025-04-05', 4500000, N'Đã thanh toán'),
+(8, '2025-04-17', 3600000, N'Đã thanh toán'),
+
+-- Tháng 5
+(9, '2025-05-04', 6100000, N'Chưa thanh toán'),
+(10,'2025-05-23', 5800000, N'Đã thanh toán'),
+
+-- Tháng 6
+(11,'2025-06-08', 3000000, N'Đã thanh toán'),
+(12,'2025-06-20', 2700000, N'Chưa thanh toán'),
+
+-- Tháng 7
+(13,'2025-07-04', 8200000, N'Đã thanh toán'),
+(14,'2025-07-18', 5600000, N'Đã thanh toán'),
+
+-- Tháng 8
+(15,'2025-08-09', 9000000, N'Chưa thanh toán'),
+(16,'2025-08-22', 2800000, N'Đã thanh toán'),
+
+-- Tháng 9
+(17,'2025-09-06', 4300000, N'Đã thanh toán'),
+(18,'2025-09-21', 6200000, N'Chưa thanh toán'),
+
+-- Tháng 10
+(19,'2025-10-05', 7500000, N'Đã thanh toán'),
+(20,'2025-10-18', 6800000, N'Đã thanh toán'),
+
+-- Tháng 11
+(21,'2025-11-07', 2600000, N'Chưa thanh toán'),
+(22,'2025-11-23', 5100000, N'Đã thanh toán'),
+
+-- Tháng 12
+(23,'2025-12-04', 8400000, N'Đã thanh toán'),
+(24,'2025-12-21', 7200000, N'Chưa thanh toán');
+
 
 -- Chi tiết hóa đơn
 INSERT INTO ChiTietHoaDon (MaHoaDon, MaDichVu, SoLuong, DonGia, MoTa)
 VALUES
-(1, 1, 2, 100000, N'Ăn sáng 2 suất'),
-(1, 2, 3, 50000, N'Giặt ủi 3kg'),
+-- Hóa đơn 1
+(1, 1, 2, 100000, N'Ăn sáng'),
+(1, 2, 2, 50000, N'Giặt ủi'),
 
-(2, 3, 2, 200000, N'Thuê xe máy 2 ngày'),
+-- Hóa đơn 2
+(2, 1, 3, 100000, N'Ăn sáng'),
+(2, 3, 2, 200000, N'Thuê xe'),
 
-(3, 1, 1, 100000, N'Ăn sáng 1 suất'),
-(3, 2, 2, 50000, N'Giặt ủi 2kg'),
+-- Hóa đơn 3
+(3, 1, 2, 100000, N'Ăn sáng'),
+(3, 4, 1, 300000, N'Đưa đón sân bay'),
 
-(5, 2, 4, 50000, N'Giặt ủi 4kg'),
-(5, 3, 1, 200000, N'Thuê xe máy 1 ngày'),
+-- Hóa đơn 4
+(4, 2, 3, 50000, N'Giặt ủi'),
 
-(6, 1, 2, 100000, N'Ăn sáng 2 suất'),
+-- Hóa đơn 5
+(5, 1, 4, 100000, N'Ăn sáng'),
+(5, 3, 3, 200000, N'Thuê xe'),
 
-(7, 1, 2, 100000, N'Ăn sáng 2 suất'),
-(7, 2, 2, 50000, N'Giặt ủi 2kg'),
-(7, 4, 1, 300000, N'Đưa đón sân bay');
+-- Hóa đơn 6
+(6, 1, 1, 100000, N'Ăn sáng');
+
+
 
 
 
@@ -304,6 +390,7 @@ delete from Phong;
 delete from DatPhong;
 delete from HoaDon;
 delete from ChiTietHoaDon
+drop table BaoCaoDoanhThu;
 DBCC CHECKIDENT ('Phong', RESEED, 0);
 DBCC CHECKIDENT ('DatPhong', RESEED, 0);
 DBCC CHECKIDENT ('HoaDon', RESEED, 0);

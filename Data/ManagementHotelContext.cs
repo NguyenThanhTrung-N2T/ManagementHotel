@@ -35,7 +35,6 @@ namespace ManagementHotel.Data
         public DbSet<KhachHang> khachHangs { get; set; }
         public DbSet<DatPhong> datPhongs { get; set; }
         public DbSet<DichVu> dichVus { get; set; }
-        public DbSet<BaoCaoDoanhThu> baoCaoDoanhThus { get; set; }
         public DbSet<NhanVien> nhanViens { get; set; }
         public DbSet<LoaiPhong> loaiPhongs { get; set; }
         public DbSet<HoaDon> hoaDons { get; set; }
