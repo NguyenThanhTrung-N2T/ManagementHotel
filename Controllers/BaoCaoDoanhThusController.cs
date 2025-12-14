@@ -16,8 +16,8 @@ namespace ManagementHotel.Controllers
         }
 
         // Get : api/baocaodoanhthus/monthly: lấy tất cả báo cáo doanh thu
-        //[Authorize(Policy = "ActiveUser")]
-        [HttpGet("/monthly")]
+        [Authorize(Policy = "AdminActive")]
+        [HttpGet("monthly")]
         public async Task<IActionResult> GetAllBaoCaoDoanhThus()
         {
             try

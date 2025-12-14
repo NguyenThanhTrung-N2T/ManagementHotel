@@ -49,14 +49,18 @@ namespace ManagementHotel.Controllers
         public async Task<IActionResult> AddPhong([FromBody] CreatePhongRequestDto phong)
         {
             // Kiểm tra dữ liệu đầu vào
-            if (!ModelState.IsValid)
-            {
+            if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
-            // Thêm phòng mới
-            var newPhong = await _phongService.AddPhongAsync(phong);
-            // Trả về kết quả
-            return CreatedAtAction(nameof(GetPhongById), new { maPhong = newPhong.MaPhong }, newPhong);
+
+            try {
+                var newPhong = await _phongService.AddPhongAsync(phong);
+                return CreatedAtAction(nameof(GetPhongById), new { maPhong = newPhong.MaPhong }, newPhong);
+            }
+            catch (Exception ex) {
+                // Return only the message, not the stack trace
+                return BadRequest(new { detail = ex.Message });
+            }
         }
 
         // Put : api/phongs/{maPhong} : Cập nhật phòng

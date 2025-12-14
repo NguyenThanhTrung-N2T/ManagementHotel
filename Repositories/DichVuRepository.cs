@@ -81,7 +81,14 @@ namespace ManagementHotel.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Lỗi khi thêm dịch vụ : {ex.Message}");
+                Console.WriteLine("Outer exception: " + ex.Message);
+
+                // Log inner exception if available
+                if (ex.InnerException != null) {
+                    Console.WriteLine("Inner exception: " + ex.InnerException.Message);
+                }
+
+                throw; // rethrow so higher layers still see the error
             }
         }
 

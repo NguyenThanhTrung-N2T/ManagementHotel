@@ -132,6 +132,17 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ManagementHotelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
+// CORS
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowReact", policy => {
+        policy
+            .WithOrigins("http://localhost:3000") // React dev server
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // REQUIRED for cookies
+    });
+});
+
 // Đăng ký Services và Repositories 
 builder.Services.AddScoped<ILoaiPhongRepository, LoaiPhongRepository>();
 builder.Services.AddScoped<IPhongRepository, PhongRepository>();
@@ -196,7 +207,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+app.UseCors("AllowReact");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

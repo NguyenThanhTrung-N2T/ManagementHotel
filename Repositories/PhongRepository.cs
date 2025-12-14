@@ -3,181 +3,153 @@ using ManagementHotel.DTOs.Phong;
 using ManagementHotel.Models;
 using ManagementHotel.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
-namespace ManagementHotel.Repositories
-{
-    public class PhongRepository : IPhongRepository
-    {
+
+namespace ManagementHotel.Repositories {
+    public class PhongRepository : IPhongRepository {
         private readonly ManagementHotelContext _context;
 
-        public PhongRepository(ManagementHotelContext context)
-        {
+        public PhongRepository(ManagementHotelContext context) {
             _context = context;
         }
 
-        // Implement các phương thức từ IPhongRepository ở đây
-
-        // Lấy tất cả phòng
-        public async Task<IEnumerable<PhongResponseDto>> GetAllPhongAsync()
-        {
+        // =========================
+        // LẤY TẤT CẢ PHÒNG
+        // =========================
+        public async Task<IEnumerable<PhongResponseDto>> GetAllPhongAsync() {
+            // Cập nhật trạng thái phòng (SP)
             await _context.Database.ExecuteSqlRawAsync("EXEC CapNhatTrangThaiPhong");
-            // Lấy tất cả phòng từ cơ sở dữ liệu
-            var phongs = await _context.phongs.ToListAsync();
-            // chuyển sang dto và trả về cho client
-            return phongs.Select(p => new PhongResponseDto
-            {
-                MaPhong = p.MaPhong,
-                SoPhong = p.SoPhong,
-                TrangThai = p.TrangThai,
-                GhiChu = p.GhiChu,
-                TenLoaiPhong = p.LoaiPhong.TenLoaiPhong
-            });
+
+            return await _context.phongs
+                .Include(p => p.LoaiPhong)
+                .Select(p => new PhongResponseDto {
+                    MaPhong = p.MaPhong,
+                    SoPhong = p.SoPhong,
+                    TrangThai = p.TrangThai,
+                    GhiChu = p.GhiChu,
+                    TenLoaiPhong = p.LoaiPhong.TenLoaiPhong
+                })
+                .ToListAsync();
         }
 
-        // Lấy phòng theo mã phòng
-        public async Task<PhongResponseDto> GetPhongByIdAsync(int maPhong)
-        {
-            // Tìm phòng theo mã phòng
-            var phong = await _context.phongs.FindAsync(maPhong);
-            // nếu tìm thấy, chuyển sang dto và trả về cho client
-            if (phong != null)
-            {
-                // Trả về DTO của phòng
-                return new PhongResponseDto
-                {
-                    MaPhong = phong.MaPhong,
-                    SoPhong = phong.SoPhong,
-                    TrangThai = phong.TrangThai,
-                    GhiChu = phong.GhiChu,
-                    TenLoaiPhong = phong.LoaiPhong.TenLoaiPhong
-                };
-            }
-            return null!;
+        // =========================
+        // LẤY PHÒNG THEO ID
+        // =========================
+        public async Task<PhongResponseDto?> GetPhongByIdAsync(int maPhong) {
+            return await _context.phongs
+                .Include(p => p.LoaiPhong)
+                .Where(p => p.MaPhong == maPhong)
+                .Select(p => new PhongResponseDto {
+                    MaPhong = p.MaPhong,
+                    SoPhong = p.SoPhong,
+                    TrangThai = p.TrangThai,
+                    GhiChu = p.GhiChu,
+                    TenLoaiPhong = p.LoaiPhong.TenLoaiPhong
+                })
+                .FirstOrDefaultAsync();
         }
 
-        // Thêm phòng mới
-        public async Task<PhongResponseDto> AddPhongAsync(CreatePhongRequestDto phong)
-        {
-            try
-            {
-                // Tạo đối tượng Phong mới từ DTO
-                var newPhong = new Phong
-                {
-                    SoPhong = phong.SoPhong,
-                    MaLoaiPhong = phong.MaLoaiPhong,
-                    TrangThai = phong.TrangThai,
-                    GhiChu = phong.GhiChu
-                };
-                // Thêm phòng vào cơ sở dữ liệu
-                _context.phongs.Add(newPhong);
-                await _context.SaveChangesAsync();
-                // Trả về DTO của phòng vừa tạo cho client
-                return new PhongResponseDto
-                {
-                    MaPhong = newPhong.MaPhong,
-                    SoPhong = newPhong.SoPhong,
-                    TrangThai = newPhong.TrangThai,
-                    GhiChu = newPhong.GhiChu,
-                    TenLoaiPhong = newPhong.LoaiPhong.TenLoaiPhong
-                };
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Lỗi khi thêm phòng: " + ex.Message);
-            }
+        // =========================
+        // THÊM PHÒNG
+        // =========================
+        public async Task<PhongResponseDto> AddPhongAsync(CreatePhongRequestDto phong) {
+            var newPhong = new Phong {
+                SoPhong = phong.SoPhong,
+                MaLoaiPhong = phong.MaLoaiPhong,
+                TrangThai = phong.TrangThai,
+                GhiChu = phong.GhiChu
+            };
+
+            _context.phongs.Add(newPhong);
+            await _context.SaveChangesAsync();
+
+            // Load navigation property
+            await _context.Entry(newPhong)
+                .Reference(p => p.LoaiPhong)
+                .LoadAsync();
+
+            return new PhongResponseDto {
+                MaPhong = newPhong.MaPhong,
+                SoPhong = newPhong.SoPhong,
+                TrangThai = newPhong.TrangThai,
+                GhiChu = newPhong.GhiChu,
+                TenLoaiPhong = newPhong.LoaiPhong.TenLoaiPhong
+            };
         }
 
-        // Kiểm tra sự tồn tại của số phòng
-        public async Task<bool> IsPhongNumberExistsAsync(string? soPhong)
-        {
-            // Kiểm tra sự tồn tại của số phòng trong cơ sở dữ liệu
+        // =========================
+        // KIỂM TRA TRÙNG SỐ PHÒNG
+        // =========================
+        public async Task<bool> IsPhongNumberExistsAsync(string? soPhong) {
             return await _context.phongs.AnyAsync(p => p.SoPhong == soPhong);
         }
 
-        // Cập nhật thông tin phòng
-        public async Task<PhongResponseDto> UpdatePhongAsync(int maPhong, UpdatePhongRequestDto phong)
-        {
-            try
-            {
-                // Tìm phòng theo mã phòng
-                var existingPhong = await _context.phongs.FindAsync(maPhong);
-                // Nếu không tìm thấy, ném ngoại lệ
-                if (existingPhong == null)
-                {
-                    throw new Exception("Phòng không tồn tại.");
-                }
-                // Cập nhật thông tin phòng
-                existingPhong.SoPhong = phong.SoPhong;
-                existingPhong.MaLoaiPhong = phong.MaLoaiPhong;
-                existingPhong.TrangThai = phong.TrangThai;
-                existingPhong.GhiChu = phong.GhiChu;
-                existingPhong.MaLoaiPhong = phong.MaLoaiPhong;
-                // Lưu thay đổi vào cơ sở dữ liệu
-                _context.phongs.Update(existingPhong);
-                await _context.SaveChangesAsync();
-                // Trả về DTO của phòng đã cập nhật cho client
-                return new PhongResponseDto
-                {
-                    MaPhong = existingPhong.MaPhong,
-                    SoPhong = existingPhong.SoPhong,
-                    TrangThai = existingPhong.TrangThai,
-                    GhiChu = existingPhong.GhiChu,
-                    TenLoaiPhong = existingPhong.LoaiPhong.TenLoaiPhong
-                };
+        // =========================
+        // CẬP NHẬT PHÒNG
+        // =========================
+        public async Task<PhongResponseDto> UpdatePhongAsync(int maPhong, UpdatePhongRequestDto phong) {
+            var existingPhong = await _context.phongs
+                .Include(p => p.LoaiPhong)
+                .FirstOrDefaultAsync(p => p.MaPhong == maPhong);
+
+            if (existingPhong == null) {
+                throw new Exception("Phòng không tồn tại.");
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Lỗi khi cập nhật phòng: " + ex.Message);
-            }
+
+            existingPhong.SoPhong = phong.SoPhong;
+            existingPhong.MaLoaiPhong = phong.MaLoaiPhong;
+            existingPhong.TrangThai = phong.TrangThai;
+            existingPhong.GhiChu = phong.GhiChu;
+
+            await _context.SaveChangesAsync();
+
+            return new PhongResponseDto {
+                MaPhong = existingPhong.MaPhong,
+                SoPhong = existingPhong.SoPhong,
+                TrangThai = existingPhong.TrangThai,
+                GhiChu = existingPhong.GhiChu,
+                TenLoaiPhong = existingPhong.LoaiPhong.TenLoaiPhong
+            };
         }
 
-        // Xóa phòng
-        public async Task<bool> DeletePhongAsync(int maPhong)
-        {
-            try
-            {
-                // Tìm phòng theo mã phòng
-                var existingPhong = await _context.phongs.FindAsync(maPhong);
-                // Nếu không tìm thấy, trả về false
-                if (existingPhong == null)
-                {
-                    return false;
-                }
-                // Xóa phòng khỏi cơ sở dữ liệu
-                _context.phongs.Remove(existingPhong);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Lỗi khi xóa phòng: " + ex.Message);
-            }
+        // =========================
+        // XÓA PHÒNG
+        // =========================
+        public async Task<bool> DeletePhongAsync(int maPhong) {
+            var phong = await _context.phongs.FindAsync(maPhong);
+
+            if (phong == null)
+                return false;
+
+            _context.phongs.Remove(phong);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        // Lọc phòng theo trạng thái
-        public async Task<IEnumerable<PhongResponseDto>> FilterPhongByStatusAsync(FilterPhongRequest filter)
-        {
-            // Lấy các phòng có trạng thái phù hợp từ cơ sở dữ liệu
-            var query = _context.phongs.AsQueryable();
-            // Kiểm tra trạng thái nếu có trong filter
-            if (!string.IsNullOrEmpty(filter.TrangThai))
-            {
+        // =========================
+        // LỌC PHÒNG
+        // =========================
+        public async Task<IEnumerable<PhongResponseDto>> FilterPhongByStatusAsync(FilterPhongRequest filter) {
+            var query = _context.phongs
+                .Include(p => p.LoaiPhong)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.TrangThai)) {
                 query = query.Where(p => p.TrangThai == filter.TrangThai);
             }
-            // Kiểm tra mã loại phòng nếu có trong filter
-            if (filter.MaLoaiPhong.HasValue)
-            {
+
+            if (filter.MaLoaiPhong.HasValue) {
                 query = query.Where(p => p.MaLoaiPhong == filter.MaLoaiPhong.Value);
             }
-            var phongs = await query.ToListAsync();
-            // chuyển sang dto và trả về cho client
-            return phongs.Select(p => new PhongResponseDto
-            {
-                MaPhong = p.MaPhong,
-                SoPhong = p.SoPhong,
-                TrangThai = p.TrangThai,
-                GhiChu = p.GhiChu,
-                TenLoaiPhong = p.LoaiPhong.TenLoaiPhong
-            });
+
+            return await query
+                .Select(p => new PhongResponseDto {
+                    MaPhong = p.MaPhong,
+                    SoPhong = p.SoPhong,
+                    TrangThai = p.TrangThai,
+                    GhiChu = p.GhiChu,
+                    TenLoaiPhong = p.LoaiPhong.TenLoaiPhong
+                })
+                .ToListAsync();
         }
     }
 }
