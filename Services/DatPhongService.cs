@@ -53,10 +53,6 @@ namespace ManagementHotel.Services
                 {
                     throw new Exception("Phòng với mã " + createDatPhongRequestDto.MaPhong + " không tồn tại.");
                 }
-                if(phong.TrangThai != "Trống")
-                {
-                    throw new Exception("Phòng với mã " + createDatPhongRequestDto.MaPhong + " không có trạng thái trống.");
-                }
                 // kiểm tra ngày nhận và ngày trả phòng
                 if(createDatPhongRequestDto.NgayNhanPhong >= createDatPhongRequestDto.NgayTraPhong)
                 {
